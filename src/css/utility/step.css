@@ -1,0 +1,33 @@
+
+.step {
+  width: calc( 1 / 16 * 100% );
+  height: 2rem;
+  padding: .5rem .125rem;
+  flex: 1 1 auto;
+  border: 0;
+}
+
+@media (--breakpoint-sm) {
+  .steps {
+    margin-left: -.25rem;
+    margin-right: -.25rem;
+  }
+  .step {
+    margin: .25rem;
+  }
+}
+
+.step-dark {
+  color: var(--blue);
+  background-color: transparent;
+  box-shadow: inset 0 0 0 2px;
+}
+
+.step-dark.is-active {
+  background-color: currentcolor;
+}
+
+.step-dark.is-current {
+  color: var(--red);
+}
+

@@ -1,7 +1,7 @@
-<div class="flex flex-center white bg-dark-gray">
+<div class="flex flex-center white bg-darken-2">
   <h1 class="h2 m0 px2 py1">Stepkit</h1>
   <div class="px2 py1">
-    <button class="h2 button-small button-blue" ng-click="bumpkit.playPause()">
+    <button class="h3 button-square button-blue" ng-click="bumpkit.playPause()">
       <div ng-hide="bumpkit.isPlaying">
         <svg class="icon" data-icon="play"></svg>
       </div>
@@ -25,6 +25,6 @@
     </button>
   </div>
   <div class="px2">
-    {{ step }}
+    {{ currentStep }}
   </div>
 </div>

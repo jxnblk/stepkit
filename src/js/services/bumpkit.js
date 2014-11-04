@@ -14,7 +14,8 @@ module.exports = function($http) {
   for (var i = 0; i < 8; i++) {
     bumpkit.mixer.addTrack();
     bumpkit.tracks[i] = {};
-    bumpkit.tracks[i].sampler = bumpkit.createSampler({ connect: bumpkit.mixer.tracks[i] });
+    //bumpkit.tracks[i].sampler = bumpkit.createSampler({ connect: bumpkit.mixer.tracks[i] });
+    bumpkit.tracks[i].sampler = bumpkit.createSampler({ });
     bumpkit.tracks[i].clip = bumpkit.createClip({ connect: bumpkit.tracks[i].sampler });
     bumpkit.tracks[i].clip.pattern = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
   }
@@ -23,7 +24,7 @@ module.exports = function($http) {
   bumpkit.metronome.beep = bumpkit.createBeep().frequency(512);
   bumpkit.metronome.clip = bumpkit.createClip({ connect: bumpkit.metronome.beep });
   bumpkit.metronome.clip.pattern = [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0];
-  //bumpkit.metronome.clip.connect(bumpkit.metronome.beep);
+  bumpkit.metronome.clip.active = false;
 
   bumpkit.loopLength = 16;
 
@@ -38,12 +39,12 @@ module.exports = function($http) {
       (function(index) {
         bumpkit.loadBuffer(kit.samples[index].url, function(response) {
           bumpkit.tracks[index].sampler.buffer(response);
-          console.log(index, response);
+          //bumpkit.tracks[index].sampler.play();
+          //console.log(index, bumpkit.tracks[index].sampler.buffer());
         })
       })(i);
     }
   }
-
 
   return bumpkit;
 

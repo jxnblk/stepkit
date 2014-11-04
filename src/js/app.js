@@ -8,6 +8,7 @@ var app = angular.module('app', ['ngTouch']);
 app.service('bumpkit', require('./services/bumpkit'));
 
 app.directive('transport', require('./directives/transport'));
+app.directive('sequencer', require('./directives/sequencer'));
 app.directive('icon', require('./directives/geomicons'));
 
 

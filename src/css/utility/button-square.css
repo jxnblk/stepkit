@@ -1,0 +1,9 @@
+
+.button-square {
+  width: 3rem;
+  height: 2rem;
+  line-height: 2rem;
+  text-align: center;
+  padding: 0 .5rem;
+}
+

@@ -3,12 +3,12 @@ module.exports = ['$scope', '$window', 'bumpkit', function($scope, $window, bump
 
   $scope.bumpkit = bumpkit;
 
-  $scope.step = 1;
+  $scope.currentStep = 0;
 
   $window.addEventListener('step', function(e) {
     if(!$scope.$$phase) {
       $scope.$apply(function() {
-        $scope.step = e.detail.step + 1;
+        $scope.currentStep = e.detail.step;
       });
     }
   });

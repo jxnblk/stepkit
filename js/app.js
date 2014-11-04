@@ -12,12 +12,12 @@ module.exports = ['$scope', '$window', 'bumpkit', function($scope, $window, bump
 
   $scope.bumpkit = bumpkit;
 
-  $scope.step = 1;
+  $scope.currentStep = 0;
 
   $window.addEventListener('step', function(e) {
     if(!$scope.$$phase) {
       $scope.$apply(function() {
-        $scope.step = e.detail.step + 1;
+        $scope.currentStep = e.detail.step;
       });
     }
   });
@@ -49,6 +49,18 @@ module.exports = function() {
 module.exports = function() {
   return {
     scope: 'true',
+    //controller: 'SequencerCtrl',
+    templateUrl: 'templates/sequencer.html',
+    link: function(scope, element, attributes) {
+    }
+  }
+};
+
+},{}],7:[function(require,module,exports){
+
+module.exports = function() {
+  return {
+    scope: 'true',
     controller: 'TransportCtrl',
     templateUrl: 'templates/transport.html',
     link: function(scope, element, attributes) {
@@ -56,7 +68,7 @@ module.exports = function() {
   }
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 'use strict';
 
@@ -67,6 +79,7 @@ var app = angular.module('app', ['ngTouch']);
 app.service('bumpkit', require('./services/bumpkit'));
 
 app.directive('transport', require('./directives/transport'));
+app.directive('sequencer', require('./directives/sequencer'));
 app.directive('icon', require('./directives/geomicons'));
 
 
@@ -74,7 +87,7 @@ app.controller('MainCtrl', require('./controllers/main'));
 app.controller('TransportCtrl', require('./controllers/transport'));
 
 
-},{"./controllers/main":3,"./controllers/transport":4,"./directives/geomicons":5,"./directives/transport":6,"./services/bumpkit":8,"bumpkit":1}],8:[function(require,module,exports){
+},{"./controllers/main":3,"./controllers/transport":4,"./directives/geomicons":5,"./directives/sequencer":6,"./directives/transport":7,"./services/bumpkit":9,"bumpkit":1}],9:[function(require,module,exports){
 
 var Bumpkit = require('bumpkit');
 
@@ -91,7 +104,8 @@ module.exports = function($http) {
   for (var i = 0; i < 8; i++) {
     bumpkit.mixer.addTrack();
     bumpkit.tracks[i] = {};
-    bumpkit.tracks[i].sampler = bumpkit.createSampler({ connect: bumpkit.mixer.tracks[i] });
+    //bumpkit.tracks[i].sampler = bumpkit.createSampler({ connect: bumpkit.mixer.tracks[i] });
+    bumpkit.tracks[i].sampler = bumpkit.createSampler({ });
     bumpkit.tracks[i].clip = bumpkit.createClip({ connect: bumpkit.tracks[i].sampler });
     bumpkit.tracks[i].clip.pattern = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
   }
@@ -100,7 +114,7 @@ module.exports = function($http) {
   bumpkit.metronome.beep = bumpkit.createBeep().frequency(512);
   bumpkit.metronome.clip = bumpkit.createClip({ connect: bumpkit.metronome.beep });
   bumpkit.metronome.clip.pattern = [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0];
-  //bumpkit.metronome.clip.connect(bumpkit.metronome.beep);
+  bumpkit.metronome.clip.active = false;
 
   bumpkit.loopLength = 16;
 
@@ -115,15 +129,15 @@ module.exports = function($http) {
       (function(index) {
         bumpkit.loadBuffer(kit.samples[index].url, function(response) {
           bumpkit.tracks[index].sampler.buffer(response);
-          console.log(index, response);
+          //bumpkit.tracks[index].sampler.play();
+          //console.log(index, bumpkit.tracks[index].sampler.buffer());
         })
       })(i);
     }
   }
 
-
   return bumpkit;
 
 };
 
-},{"bumpkit":1}]},{},[7])
+},{"bumpkit":1}]},{},[8])

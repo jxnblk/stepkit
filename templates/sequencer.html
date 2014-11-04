@@ -1,0 +1,25 @@
+
+<div class="py2">
+  <div ng-repeat="track in bumpkit.tracks" class="flex flex-center full-width">
+    <div ng-click="track.sampler.play()"
+      class="px2 py1">
+      {{ $index }}
+    </div>
+    <div class="px2 full-width flex-auto">
+      <div class="flex steps">
+        <button
+          class="step h6 step-dark"
+          ng-repeat="step in track.clip.pattern track by $index"
+          ng-click="track.clip.pattern[$index] = 1 - track.clip.pattern[$index]"
+          ng-class="{
+            'is-current': currentStep == $index,
+            'is-active': step == 1
+          }">
+          {{ step }}
+          {{ $index % 4 ? '' : $index / 4 + 1 }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
