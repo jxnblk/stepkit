@@ -1,0 +1,23 @@
+<div class="flex flex-center white bg-dark-gray">
+  <h1 class="h2 m0 px2 py1">Stepkit</h1>
+  <div class="px2 py1">
+    <button class="h2 button-small button-blue" ng-click="bumpkit.playPause()">
+      <div ng-hide="bumpkit.isPlaying">
+        <svg class="icon" data-icon="play"></svg>
+      </div>
+      <div ng-show="bumpkit.isPlaying">
+        <svg class="icon" data-icon="pause"></svg>
+      </div>
+    </button>
+  </div>
+  <div class="px2">
+    1.1
+  </div>
+  <div class="h5 px2">
+    <label>BPM</label>
+    <input type="text" size="2" class="m0 field-dark" ng-model="bumpkit.tempo">
+  </div>
+  <div class="flex-grow px2 right-align">
+    {{ step }}
+  </div>
+</div>

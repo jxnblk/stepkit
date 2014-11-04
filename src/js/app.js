@@ -5,11 +5,12 @@ var Bumpkit = require('bumpkit');
 
 var app = angular.module('app', ['ngTouch']);
 
-app.controller('MainCtrl',
-  ['$scope',
-  function($scope) {
+app.service('bumpkit', require('./services/bumpkit'));
 
-    console.log('MainCtrl');
+app.directive('transport', require('./directives/transport'));
+app.directive('icon', require('./directives/geomicons'));
 
-}]);
+
+app.controller('MainCtrl', require('./controllers/main'));
+app.controller('TransportCtrl', require('./controllers/transport'));
 

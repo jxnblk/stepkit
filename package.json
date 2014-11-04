@@ -19,6 +19,8 @@
     "gulp-browserify": "^0.5.0",
     "gulp-basswork": "0.0.9",
     "gulp-webserver": "^0.8.6",
-    "bumpkit": "0.0.1"
+    "bumpkit": "0.0.1",
+    "flex-object": "0.0.4",
+    "geomicons-open": "0.0.4"
   }
 }

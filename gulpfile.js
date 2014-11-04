@@ -18,7 +18,7 @@ gulp.task('css', function() {
 });
 
 gulp.task('serve', function() {
-  gulp.src('./**/*')
+  gulp.src('./')
     .pipe(webserver({
     }));
 });
