@@ -1,0 +1,14 @@
+[
+  {
+    "name": "hip_drums",
+    "samples": [
+      { "url": "http://jxnblk.s3.amazonaws.com/stepkit/hip-drums/Hip_Crash.mp3" },
+      { "url": "http://jxnblk.s3.amazonaws.com/stepkit/hip-drums/Hip_Cymbal.mp3" },
+      { "url": "http://jxnblk.s3.amazonaws.com/stepkit/hip-drums/Hip_Hat_Open.mp3" },
+      { "url": "http://jxnblk.s3.amazonaws.com/stepkit/hip-drums/Hip_Hat.mp3" },
+      { "url": "http://jxnblk.s3.amazonaws.com/stepkit/hip-drums/Hip_Kick.mp3" },
+      { "url": "http://jxnblk.s3.amazonaws.com/stepkit/hip-drums/Hip_Snare.mp3" },
+      { "url": "http://jxnblk.s3.amazonaws.com/stepkit/hip-drums/Hip_Tambourine.mp3" }
+    ]
+  }
+]

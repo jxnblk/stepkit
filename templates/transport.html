@@ -18,6 +18,13 @@
     <input type="text" size="2" class="m0 field-dark" ng-model="bumpkit.tempo">
   </div>
   <div class="flex-grow px2 right-align">
+    <button class="h6 button-small"
+      ng-class="bumpkit.metronome.clip.active? 'button-blue' : 'button-gray'"
+      ng-click="bumpkit.metronome.clip.active = !bumpkit.metronome.clip.active">
+      Metronome
+    </button>
+  </div>
+  <div class="px2">
     {{ step }}
   </div>
 </div>

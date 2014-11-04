@@ -1,8 +1,6 @@
 
 module.exports = ['$scope', '$window', 'bumpkit', function($scope, $window, bumpkit) {
 
-  console.log('MainCtrl', bumpkit, bumpkit.mixer);
-
   $scope.bumpkit = bumpkit;
 
   $scope.step = 1;

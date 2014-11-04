@@ -12,6 +12,10 @@
   <div transport></div>
 
   <hr>
+  <pre ng-repeat="track in bumpkit.tracks">
+    {{ $index }}
+    <span ng-repeat="step in track.clip.pattern track by $index">{{ step }}</span>
+  </pre>
   <pre>{{ bumpkit.tempo | json }}</pre>
 
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.5/angular.min.js"></script>
