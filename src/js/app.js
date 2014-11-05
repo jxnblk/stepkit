@@ -12,8 +12,10 @@ app.filter('step', require('./filters/step'));
 
 app.directive('transport', require('./directives/transport'));
 app.directive('sequencer', require('./directives/sequencer'));
+app.directive('mixer', require('./directives/mixer'));
 app.directive('icon', require('./directives/geomicons'));
 
 app.controller('MainCtrl', require('./controllers/main'));
 app.controller('TransportCtrl', require('./controllers/transport'));
+app.controller('SequencerCtrl', require('./controllers/sequencer'));
 

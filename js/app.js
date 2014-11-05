@@ -13,6 +13,7 @@ module.exports = [
   function($scope, $window, bumpkit, loader) {
 
   $scope.bumpkit = bumpkit;
+  $scope.mixer = bumpkit.mixer;
   $scope.currentStep = 0;
 
   loader.init()
@@ -34,10 +35,22 @@ module.exports = [
 },{}],4:[function(require,module,exports){
 
 module.exports = ['$scope', function($scope) {
-  //console.log('TransportCtrl');
+  //console.log('SequencerCtrl');
+
+  $scope.steps = [];
+  for (var i = 0; i < 16; i++) {
+    $scope.steps.push(i);
+  }
+
 }];
 
 },{}],5:[function(require,module,exports){
+
+module.exports = ['$scope', function($scope) {
+  //console.log('TransportCtrl');
+}];
+
+},{}],6:[function(require,module,exports){
 
 var Geomicons = require('geomicons-open');
 
@@ -50,19 +63,31 @@ module.exports = function() {
   }
 };
 
-},{"geomicons-open":2}],6:[function(require,module,exports){
+},{"geomicons-open":2}],7:[function(require,module,exports){
 
 module.exports = function() {
   return {
     scope: 'true',
-    //controller: 'SequencerCtrl',
+    //controller: 'MixerCtrl',
+    templateUrl: 'templates/mixer.html',
+    link: function(scope, element, attributes) {
+    }
+  }
+};
+
+},{}],8:[function(require,module,exports){
+
+module.exports = function() {
+  return {
+    scope: 'true',
+    controller: 'SequencerCtrl',
     templateUrl: 'templates/sequencer.html',
     link: function(scope, element, attributes) {
     }
   }
 };
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 
 module.exports = function() {
   return {
@@ -74,7 +99,7 @@ module.exports = function() {
   }
 };
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 'use strict';
 
@@ -89,13 +114,15 @@ app.filter('step', require('./filters/step'));
 
 app.directive('transport', require('./directives/transport'));
 app.directive('sequencer', require('./directives/sequencer'));
+app.directive('mixer', require('./directives/mixer'));
 app.directive('icon', require('./directives/geomicons'));
 
 app.controller('MainCtrl', require('./controllers/main'));
 app.controller('TransportCtrl', require('./controllers/transport'));
+app.controller('SequencerCtrl', require('./controllers/sequencer'));
 
 
-},{"./controllers/main":3,"./controllers/transport":4,"./directives/geomicons":5,"./directives/sequencer":6,"./directives/transport":7,"./filters/step":9,"./services/bumpkit":10,"./services/loader":11,"bumpkit":1}],9:[function(require,module,exports){
+},{"./controllers/main":3,"./controllers/sequencer":4,"./controllers/transport":5,"./directives/geomicons":6,"./directives/mixer":7,"./directives/sequencer":8,"./directives/transport":9,"./filters/step":11,"./services/bumpkit":12,"./services/loader":13,"bumpkit":1}],11:[function(require,module,exports){
 
 // Convert integer to 4/4 beat decimal string
 module.exports = function() {
@@ -107,7 +134,7 @@ module.exports = function() {
 };
 
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 
 var Bumpkit = require('bumpkit');
 
@@ -124,8 +151,7 @@ module.exports = function() {
   for (var i = 0; i < 8; i++) {
     bumpkit.mixer.addTrack();
     bumpkit.tracks[i] = {};
-    //bumpkit.tracks[i].sampler = bumpkit.createSampler({ connect: bumpkit.mixer.tracks[i] });
-    bumpkit.tracks[i].sampler = bumpkit.createSampler({ });
+    bumpkit.tracks[i].sampler = bumpkit.createSampler({ connect: bumpkit.mixer.tracks[i] });
     bumpkit.tracks[i].clip = bumpkit.createClip({ connect: bumpkit.tracks[i].sampler });
     bumpkit.tracks[i].clip.pattern = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
   }
@@ -142,7 +168,7 @@ module.exports = function() {
 
 };
 
-},{"bumpkit":1}],11:[function(require,module,exports){
+},{"bumpkit":1}],13:[function(require,module,exports){
 
 module.exports = function($http, $q, bumpkit) {
 
@@ -182,4 +208,4 @@ module.exports = function($http, $q, bumpkit) {
 };
 
 
-},{}]},{},[8])
+},{}]},{},[10])

@@ -14,8 +14,7 @@ module.exports = function() {
   for (var i = 0; i < 8; i++) {
     bumpkit.mixer.addTrack();
     bumpkit.tracks[i] = {};
-    //bumpkit.tracks[i].sampler = bumpkit.createSampler({ connect: bumpkit.mixer.tracks[i] });
-    bumpkit.tracks[i].sampler = bumpkit.createSampler({ });
+    bumpkit.tracks[i].sampler = bumpkit.createSampler({ connect: bumpkit.mixer.tracks[i] });
     bumpkit.tracks[i].clip = bumpkit.createClip({ connect: bumpkit.tracks[i].sampler });
     bumpkit.tracks[i].clip.pattern = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
   }

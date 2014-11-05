@@ -1,0 +1,10 @@
+
+.range {
+}
+
+.range-vertical {
+  width: 1rem;
+  height: 12rem;
+  -webkit-appearance: slider-vertical;
+}
+

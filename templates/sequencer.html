@@ -1,14 +1,33 @@
-
 <div class="py2" ng-if="tracks.length">
   <div class="flex flex-center">
+    <div class="sm-show" style="width:14rem"></div>
+    <div class="px2 flex-auto">
+      <div class="flex">
+        <div class="h6 flex-auto" ng-repeat="step in steps">
+          {{ step + 1 | step }}
+        </div>
+      </div>
+    </div>
   </div>
-  <div ng-repeat="track in tracks" class="sm-flex flex-center full-width">
+  <div ng-repeat="track in tracks"
+    class="sm-flex flex-center full-width"
+    ng-class="{'bg-darken-2': $index % 2 }">
     <a href ng-click="track.sampler.play()"
       style="min-width:12rem"
-      class="h6 button button-nav-dark px2 py1">
+      class="h5 button button-nav-dark px2 py1">
       {{ $index + 1 }} {{ track.name }}
     </a>
-    <div class="px2 xfull-width flex-auto">
+    <button
+      class="h5 button button-small"
+      style="width:2rem"
+      ng-class="{
+        'button-red': mixer.tracks[$index].mute.gain.value == 0,
+        'button-gray': mixer.tracks[$index].mute.gain.value == 1
+      }"
+      ng-click="mixer.tracks[$index].toggleMute()">
+      M
+    </button>
+    <div class="px2 flex-auto">
       <div class="flex steps">
         <button
           class="step h6 step-dark"

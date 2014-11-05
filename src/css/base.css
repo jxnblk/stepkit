@@ -6,6 +6,7 @@
 @import './utility/button-square';
 @import './utility/step';
 @import './color/theme-dark';
+@import './color/input-range';
 
 :root {
 }

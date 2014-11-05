@@ -4,6 +4,7 @@ module.exports = [
   function($scope, $window, bumpkit, loader) {
 
   $scope.bumpkit = bumpkit;
+  $scope.mixer = bumpkit.mixer;
   $scope.currentStep = 0;
 
   loader.init()
