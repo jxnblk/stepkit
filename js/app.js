@@ -8,11 +8,17 @@
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 
-module.exports = ['$scope', '$window', 'bumpkit', function($scope, $window, bumpkit) {
+module.exports = [
+  '$scope', '$window', 'bumpkit', 'loader',
+  function($scope, $window, bumpkit, loader) {
 
   $scope.bumpkit = bumpkit;
-
   $scope.currentStep = 0;
+
+  loader.init()
+    .then(function(tracks) {
+      $scope.tracks = bumpkit.tracks;
+    });
 
   $window.addEventListener('step', function(e) {
     if(!$scope.$$phase) {
@@ -77,21 +83,35 @@ var Bumpkit = require('bumpkit');
 var app = angular.module('app', ['ngTouch']);
 
 app.service('bumpkit', require('./services/bumpkit'));
+app.service('loader', require('./services/loader'));
+
+app.filter('step', require('./filters/step'));
 
 app.directive('transport', require('./directives/transport'));
 app.directive('sequencer', require('./directives/sequencer'));
 app.directive('icon', require('./directives/geomicons'));
 
-
 app.controller('MainCtrl', require('./controllers/main'));
 app.controller('TransportCtrl', require('./controllers/transport'));
 
 
-},{"./controllers/main":3,"./controllers/transport":4,"./directives/geomicons":5,"./directives/sequencer":6,"./directives/transport":7,"./services/bumpkit":9,"bumpkit":1}],9:[function(require,module,exports){
+},{"./controllers/main":3,"./controllers/transport":4,"./directives/geomicons":5,"./directives/sequencer":6,"./directives/transport":7,"./filters/step":9,"./services/bumpkit":10,"./services/loader":11,"bumpkit":1}],9:[function(require,module,exports){
+
+// Convert integer to 4/4 beat decimal string
+module.exports = function() {
+  return function(step) {
+    var beat = Math.ceil(step/4);
+    var tick = step%4 || 4;
+    return beat + '.' + tick;
+  };
+};
+
+
+},{}],10:[function(require,module,exports){
 
 var Bumpkit = require('bumpkit');
 
-module.exports = function($http) {
+module.exports = function() {
 
   bumpkit = new Bumpkit();
 
@@ -118,26 +138,48 @@ module.exports = function($http) {
 
   bumpkit.loopLength = 16;
 
-
-  $http.get('data/kits.json').success(function(response) {
-    bumpkit.kits = response;
-    loadKit(bumpkit.kits[0]);
-  });
-
-  function loadKit(kit) {
-    for (var i = 0; i < kit.samples.length; i++) {
-      (function(index) {
-        bumpkit.loadBuffer(kit.samples[index].url, function(response) {
-          bumpkit.tracks[index].sampler.buffer(response);
-          //bumpkit.tracks[index].sampler.play();
-          //console.log(index, bumpkit.tracks[index].sampler.buffer());
-        })
-      })(i);
-    }
-  }
-
   return bumpkit;
 
 };
 
-},{"bumpkit":1}]},{},[8])
+},{"bumpkit":1}],11:[function(require,module,exports){
+
+module.exports = function($http, $q, bumpkit) {
+
+  var self = this;
+
+  this.init = function() {
+    var deferred = $q.defer();
+    $http.get('data/kits.json').success(function(response) {
+      bumpkit.kits = response;
+      self.loadKit(bumpkit.kits[0], function(tracks) {
+        deferred.resolve(tracks);
+      });
+    });
+    return deferred.promise;
+  };
+
+  this.loadKit = function(kit, callback) {
+    var total = 0;
+    for (var i = 0; i < kit.samples.length; i++) {
+      (function(index) {
+        bumpkit.loadBuffer(kit.samples[index].url, function(response) {
+          bumpkit.tracks[index].name = kit.samples[index].name;
+          bumpkit.tracks[index].sampler.buffer(response);
+          total++;
+          if (total == kit.samples.length) {
+            if (callback) callback(bumpkit.tracks);
+          };
+        })
+      })(i);
+    }
+  };
+
+  this.loadSample = function(index, sample) {
+    console.log('to do: load ' + sample + ' in track ' + index + 1);
+  };
+
+};
+
+
+},{}]},{},[8])

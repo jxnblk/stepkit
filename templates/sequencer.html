@@ -1,11 +1,14 @@
 
-<div class="py2">
-  <div ng-repeat="track in bumpkit.tracks" class="flex flex-center full-width">
-    <div ng-click="track.sampler.play()"
-      class="px2 py1">
-      {{ $index }}
-    </div>
-    <div class="px2 full-width flex-auto">
+<div class="py2" ng-if="tracks.length">
+  <div class="flex flex-center">
+  </div>
+  <div ng-repeat="track in tracks" class="sm-flex flex-center full-width">
+    <a href ng-click="track.sampler.play()"
+      style="min-width:12rem"
+      class="h6 button button-nav-dark px2 py1">
+      {{ $index + 1 }} {{ track.name }}
+    </a>
+    <div class="px2 xfull-width flex-auto">
       <div class="flex steps">
         <button
           class="step h6 step-dark"
@@ -20,5 +23,9 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="center py4" ng-if="!tracks.length">
+  Loading...
 </div>
 

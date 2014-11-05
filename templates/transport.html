@@ -11,7 +11,7 @@
     </button>
   </div>
   <div class="px2">
-    1.1
+    {{ currentStep + 1 | step }}
   </div>
   <div class="h5 px2">
     <label>BPM</label>
@@ -25,6 +25,6 @@
     </button>
   </div>
   <div class="px2">
-    {{ currentStep }}
+    {{ currentStep | step }}
   </div>
 </div>

@@ -1,7 +1,7 @@
 
 var Bumpkit = require('bumpkit');
 
-module.exports = function($http) {
+module.exports = function() {
 
   bumpkit = new Bumpkit();
 
@@ -27,24 +27,6 @@ module.exports = function($http) {
   bumpkit.metronome.clip.active = false;
 
   bumpkit.loopLength = 16;
-
-
-  $http.get('data/kits.json').success(function(response) {
-    bumpkit.kits = response;
-    loadKit(bumpkit.kits[0]);
-  });
-
-  function loadKit(kit) {
-    for (var i = 0; i < kit.samples.length; i++) {
-      (function(index) {
-        bumpkit.loadBuffer(kit.samples[index].url, function(response) {
-          bumpkit.tracks[index].sampler.buffer(response);
-          //bumpkit.tracks[index].sampler.play();
-          //console.log(index, bumpkit.tracks[index].sampler.buffer());
-        })
-      })(i);
-    }
-  }
 
   return bumpkit;
 

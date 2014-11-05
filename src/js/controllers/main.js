@@ -1,9 +1,15 @@
 
-module.exports = ['$scope', '$window', 'bumpkit', function($scope, $window, bumpkit) {
+module.exports = [
+  '$scope', '$window', 'bumpkit', 'loader',
+  function($scope, $window, bumpkit, loader) {
 
   $scope.bumpkit = bumpkit;
-
   $scope.currentStep = 0;
+
+  loader.init()
+    .then(function(tracks) {
+      $scope.tracks = bumpkit.tracks;
+    });
 
   $window.addEventListener('step', function(e) {
     if(!$scope.$$phase) {
