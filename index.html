@@ -1,23 +1,36 @@
-<!doctype html>
-<html ng-app="app">
+<!DOCTYPE html>
+<html>
 <head>
   <meta charset="utf-8">
-  <title>Stepkit</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-  <link rel="stylesheet" href="css/base.css">
+  <title>stepkit</title>
+  <meta name="author" content="Brent Jackson">
+  <meta name="description" content="stepkit">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://d2v52k3cl9vedd.cloudfront.net/bassdock/0.1.0/bassdock.min.css">
+  <style>
+    /*
+    .icon { width: 1em; height: 1em; position: relative; top: .1875em; }
+    */
+  </style>
 </head>
-<body ng-controller="MainCtrl" class="bold theme-dark">
+<body class="white bg-dark-gray">
 
-  <transport></transport>
+<div id="app">
+  <div data-reactid=".178t6q83rwg" data-react-checksum="-1326650825"><div class="flex flex-center flex-wrap border-bottom" data-reactid=".178t6q83rwg.0"><h1 class="h3 m0 px1" data-reactid=".178t6q83rwg.0.0">Stepkit</h1><div class="px1 py1" data-reactid=".178t6q83rwg.0.1"><button class="button-blue" data-reactid=".178t6q83rwg.0.1.0"><svg viewBox="0 0 32 32" class="icon" style="fill:currentColor;" data-reactid=".178t6q83rwg.0.1.0.0"><path d="M4 4 L28 16 L4 28 z " data-reactid=".178t6q83rwg.0.1.0.0.0"></path></svg></button></div><div class="p1" data-reactid=".178t6q83rwg.0.2"><input type="text" class="m0 field-dark" data-reactid=".178t6q83rwg.0.2.0"></div><div class="flex-auto" data-reactid=".178t6q83rwg.0.3"></div></div><h1 data-reactid=".178t6q83rwg.1">Stepkit</h1></div>
+</div>
 
-  <sequencer></sequencer>
 
-  <mixer></mixer>
+<script src="js/app.min.js"></script>
 
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.5/angular.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.5/angular-touch.min.js"></script>
-  <script src="js/app.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-4603832-6', 'auto');
+  ga('send', 'pageview');
+</script>
 
 </body>
 </html>

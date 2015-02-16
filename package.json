@@ -13,14 +13,25 @@
   },
   "homepage": "https://github.com/jxnblk/stepkit",
   "devDependencies": {
-    "gulp-rename": "^1.2.0",
-    "basscss": "^4.1.4",
-    "gulp": "^3.8.10",
-    "gulp-browserify": "^0.5.0",
-    "gulp-basswork": "0.0.9",
-    "gulp-webserver": "^0.8.6",
+    "browserify": "^8.1.3",
     "bumpkit": "0.0.1",
-    "flex-object": "0.0.4",
-    "geomicons-open": "0.0.4"
+    "geomicons-open": "0.0.4",
+    "gulp": "^3.8.10",
+    "gulp-rename": "^1.2.0",
+    "gulp-s3": "^0.3.0",
+    "gulp-uglify": "^1.1.0",
+    "gulp-webserver": "^0.8.6",
+    "lodash": "^3.2.0",
+    "node-jsx": "^0.12.4",
+    "query-string": "^1.0.0",
+    "react": "^0.12.2",
+    "reactify": "^1.0.0",
+    "superagent": "^0.21.0",
+    "vinyl-transform": "^1.0.0"
+  },
+  "browserify": {
+    "transform": [
+      "reactify"
+    ]
   }
 }

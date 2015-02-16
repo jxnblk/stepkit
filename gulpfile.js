@@ -1,32 +1,40 @@
 
 var gulp = require('gulp');
+var browserify = require('browserify');
+var transform = require('vinyl-transform');
+var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
-var browserify = require('gulp-browserify');
-var basswork = require('gulp-basswork');
 var webserver = require('gulp-webserver');
 
+var build = require('./src/build');
+
+gulp.task('build', function() {
+  var data = require('./src/data');
+  build(data);
+});
+
 gulp.task('js', function() {
-  gulp.src('./src/js/app.js')
-    .pipe(browserify())
+  var browserified = transform(function(filename) {
+    var b = browserify(filename);
+    return b.bundle();
+  });
+  gulp.src('./src/app.js')
+    .pipe(browserified)
+    .pipe(uglify())
+    .pipe(rename({ extname: '.min.js' }))
     .pipe(gulp.dest('./js'));
 });
 
-gulp.task('css', function() {
-  gulp.src('./src/css/base.css')
-    .pipe(basswork())
-    .pipe(gulp.dest('./css'));
-});
 
 gulp.task('serve', function() {
-  gulp.src('./')
-    .pipe(webserver({
-    }));
+  gulp.src('.')
+    .pipe(webserver());
 });
 
-gulp.task('dev', ['js', 'css', 'serve'], function() {
+gulp.task('dev', ['build', 'js', 'serve'], function() {
   gulp.watch(
     ['./src/**/*'],
-    ['js', 'css']
+    ['build', 'js']
   );
 });
 
