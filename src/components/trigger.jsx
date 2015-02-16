@@ -4,10 +4,22 @@ var React = require('react');
 
 module.exports = React.createClass({
 
-  handleClick: function(e) {
-    console.log('updateClip');
-    var active = !this.props.active;
-    this.props.updateClip(active ? 1 : 0);
+  handleMouseDown: function(e) {
+    var mode = this.props.active ? 'deselect' : 'select';
+    this.props.setMouseDown(mode);
+    this.props.updateClip(!this.props.active ? 1 : 0);
+  },
+
+  handleMouseUp: function(e) {
+    this.props.setMouseUp();
+  },
+
+  handleMouseEnter: function(e) {
+    if (this.props.isSelecting) {
+      this.props.updateClip(1);
+    } else if (this.props.isDeselecting) {
+      this.props.updateClip(0);
+    }
   },
 
   render: function() {
@@ -20,9 +32,12 @@ module.exports = React.createClass({
     };
     return (
       <button className={buttonClass}
+        title="Toggle step"
         style={buttonStyle}
-        onClick={this.handleClick}>
-      </button>
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp}
+        onMouseEnter={this.handleMouseEnter}
+        />
     )
   },
 

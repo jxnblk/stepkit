@@ -7,6 +7,28 @@ var TriggerRow = require('./trigger-row.jsx');
 
 module.exports = React.createClass({
 
+  getInitialState: function() {
+    return {
+      isSelecting: false,
+      isDeselecting: false,
+    }
+  },
+
+  setMouseDown: function(mode) {
+    if (mode == 'select') {
+      this.setState({ isSelecting: true });
+    } else if (mode == 'deselect') {
+      this.setState({ isDeselecting: true });
+    }
+  },
+
+  setMouseUp: function() {
+    this.setState({
+      isSelecting: false,
+      isDeselecting: false
+    });
+  },
+
   renderRow: function(clip, i) {
     var self = this;
     var updateClip = function(clip) {
@@ -15,7 +37,11 @@ module.exports = React.createClass({
       self.props.updateClips(clips);
     };
     return (
-      <TriggerRow clip={clip}
+      <TriggerRow
+        {...this.state}
+        clip={clip}
+        setMouseDown={this.setMouseDown}
+        setMouseUp={this.setMouseUp}
         currentStep={this.props.currentStep}
         updateClip={updateClip}
         track={i} />

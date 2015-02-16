@@ -19,7 +19,9 @@ module.exports = React.createClass({
     var current = (this.props.currentStep == i);
     return (
       <div className="flex-auto flex px1">
-        <Trigger active={active}
+        <Trigger
+          {...this.props}
+          active={active}
           current={current}
           updateClip={updateClip} />
       </div>

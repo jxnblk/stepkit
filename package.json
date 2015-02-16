@@ -23,6 +23,7 @@
     "gulp-webserver": "^0.8.6",
     "lodash": "^3.2.0",
     "node-jsx": "^0.12.4",
+    "q": "^1.1.2",
     "query-string": "^1.0.0",
     "react": "^0.12.2",
     "reactify": "^1.0.0",
@@ -33,5 +34,22 @@
     "transform": [
       "reactify"
     ]
-  }
+  },
+  "audio_path": "//jxnblk.s3.amazonaws.com/stepkit",
+  "kits": [
+    {
+      "name": "Bedford",
+      "path": "/bedford",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "rim.mp3",
+        "hat.mp3",
+        "bell.mp3",
+        "stab01.mp3",
+        "stab02.mp3",
+        "stab03.mp3"
+      ]
+    }
+  ]
 }

@@ -2,6 +2,7 @@
 
 var React = require('react');
 var qs = require('query-string');
+var Q = require('q');
 
 var bumpkit = require('../bumpkit');
 
@@ -16,13 +17,14 @@ module.exports = React.createClass({
       loopLength: 16,
       tempo: 120,
       currentStep: 0,
-      volume: .0625,
+      volume: .75,
       buffers: null,
       mixer: null,
       clips: [],
       samplers: [],
     }
   },
+
 
   initMixer: function() {
     var mixer = bumpkit.createMixer();
@@ -49,22 +51,48 @@ module.exports = React.createClass({
         clips[i].pattern.push( Math.round(Math.random() * .625) );
       }
     }
-    this.setState({ clips: clips }, function() {
-      console.log('randomized', this.state.clips[0].pattern);
-    });
+    this.updateClips(clips);
   },
 
+  loadBank: function(i) {
+    var bank = this.props.banks[i];
+    var clips = this.state.clips;
+    bank.tracks.forEach(function(track, j) {
+      clips[j].pattern = track.pattern;
+    });
+    this.updateClips(clips);
+  },
+
+  initBuffers: function() {
+    var self = this;
+    var deferred = Q.defer();
+    var kit = this.props.kits[0];
+    var samples = kit.samples;
+    samples.forEach(function(sample, i) {
+      (function(index) {
+        var url = self.props.audio_path + kit.path + '/' + sample;
+        bumpkit.loadBuffer(url, function(buffer) {
+          bumpkit.buffers[index] = buffer;
+          delete bumpkit.buffers[url];
+          if ( samples.length <= Object.keys(bumpkit.buffers).length ) {
+            deferred.resolve();
+          }
+        });
+      })(i);
+    })
+    return deferred.promise;
+  },
 
   initSamplers: function() {
     var samplers = [];
     for (var i = 0; i < 8; i++) {
-      var freq = Math.pow(2, i + 3) / 3;
-      console.log(freq);
-      var beep = bumpkit.createBeep({
-        duration: .25,
-        frequency: freq,
-      });
-      samplers[i] = beep;
+      //var freq = Math.pow(2, i + 3) / 3;
+      //var beep = bumpkit.createBeep({
+      //  duration: .25,
+      //  frequency: freq,
+      //});
+      var sampler = bumpkit.createSampler();
+      samplers[i] = sampler;
     }
     return samplers;
   },
@@ -78,6 +106,16 @@ module.exports = React.createClass({
       clip.connect(sampler);
       sampler.connect(track);
     }
+  },
+
+  loadSamplers: function() {
+    var samplers = this.state.samplers;
+    var bufferKeys = Object.keys(bumpkit.buffers);
+    bufferKeys.forEach(function(key, i) {
+      samplers[i].buffer(bumpkit.buffers[key]);
+    });
+    this.setState({ samplers: samplers });
+    //console.log('samplers loaded');
   },
 
   addStepListener: function() {
@@ -99,6 +137,10 @@ module.exports = React.createClass({
 
   loadBuffer: function(url) {
     bumpkit.loadBuffer(url);
+  },
+
+  loadKit: function(i) {
+    console.log('load kit ' + i + ' placeholder');
   },
 
   handleTempoChange: function(e) {
@@ -139,10 +181,15 @@ module.exports = React.createClass({
       tempo: bumpkit.tempo,
     }, function() {
       self.initConnections();
-      self.randomizePatterns();
+      self.loadBank(0);
+      //self.randomizePatterns();
+      self.initBuffers().then(function() {
+        //console.log('buffers loaded', bumpkit.buffers);
+        self.loadSamplers();
+      });;
     });
-    this.state.mixer.master.volume.gain.value = .0625;
-    console.log(this.state.mixer.master.volume.gain.value);
+    this.state.mixer.master.volume.gain.value = this.state.volume;
+    //console.log('test volume', this.state.mixer.master.volume.gain.value);
     this.addStepListener();
   },
 
@@ -153,6 +200,7 @@ module.exports = React.createClass({
         <Toolbar {...this.props} {...this.state}
           playPause={this.playPause}
           handleTempoChange={this.handleTempoChange}
+          loadBank={this.loadBank}
           randomize={this.randomizePatterns}
           />
         <Sequencer {...this.props} {...this.state}

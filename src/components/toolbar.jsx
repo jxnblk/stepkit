@@ -2,15 +2,12 @@
 
 var React = require('react');
 
-var Icon = require('./icon.jsx');
 var stepFilter = require('../util/step-filter');
+var Icon = require('./icon.jsx');
+var KitSelect = require('./kit-select.jsx');
+var BankSelect = require('./bank-select.jsx');
 
 module.exports = React.createClass({
-
-  getInitialState: function() {
-    return {
-    }
-  },
 
   render: function() {
     var tempo = this.props.tempo;
@@ -39,6 +36,12 @@ module.exports = React.createClass({
               className="m0 field-dark" />
           </div>
           <div className="flex-auto" />
+          <div className="p1">
+            <BankSelect {...this.props} />
+          </div>
+          <div className="p1">
+            <KitSelect {...this.props} />
+          </div>
           <div className="p1">
             <button className="button-small button-gray"
               onClick={this.props.randomize}>
