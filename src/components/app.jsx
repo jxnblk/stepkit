@@ -37,20 +37,32 @@ module.exports = React.createClass({
     for (var i = 0; i < 8; i++) {
       clips[i] = bumpkit.createClip();
       clips[i].pattern = [];
-      for (var j = 0; j < 16; j++) {
-        clips[i].pattern.push( Math.round(Math.random()) );
-      }
-      console.log(clips[i].pattern);
     }
     return clips;
   },
 
+  randomizePatterns: function() {
+    var clips = this.state.clips;
+    for (var i = 0; i < 8; i++) {
+      clips[i].pattern = [];
+      for (var j = 0; j < 16; j++) {
+        clips[i].pattern.push( Math.round(Math.random() * .625) );
+      }
+    }
+    this.setState({ clips: clips }, function() {
+      console.log('randomized', this.state.clips[0].pattern);
+    });
+  },
+
+
   initSamplers: function() {
     var samplers = [];
     for (var i = 0; i < 8; i++) {
+      var freq = Math.pow(2, i + 3) / 3;
+      console.log(freq);
       var beep = bumpkit.createBeep({
         duration: .25,
-        frequency: 64 * i,
+        frequency: freq,
       });
       samplers[i] = beep;
     }
@@ -127,8 +139,9 @@ module.exports = React.createClass({
       tempo: bumpkit.tempo,
     }, function() {
       self.initConnections();
+      self.randomizePatterns();
     });
-    this.state.mixer.master.volume.gain.value = .00625;
+    this.state.mixer.master.volume.gain.value = .0625;
     console.log(this.state.mixer.master.volume.gain.value);
     this.addStepListener();
   },
@@ -140,9 +153,11 @@ module.exports = React.createClass({
         <Toolbar {...this.props} {...this.state}
           playPause={this.playPause}
           handleTempoChange={this.handleTempoChange}
-          updateClips={this.updateClips}
+          randomize={this.randomizePatterns}
           />
-        <Sequencer {...this.props} {...this.state} />
+        <Sequencer {...this.props} {...this.state}
+          updateClips={this.updateClips}
+        />
       </div>
     )
   }

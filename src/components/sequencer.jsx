@@ -16,6 +16,7 @@ module.exports = React.createClass({
     };
     return (
       <TriggerRow clip={clip}
+        currentStep={this.props.currentStep}
         updateClip={updateClip}
         track={i} />
     )

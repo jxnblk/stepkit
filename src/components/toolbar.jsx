@@ -40,6 +40,12 @@ module.exports = React.createClass({
           </div>
           <div className="flex-auto" />
           <div className="p1">
+            <button className="button-small button-gray"
+              onClick={this.props.randomize}>
+              Randomize
+            </button>
+          </div>
+          <div className="p1">
             <button className="button-small button-gray">Load</button>
           </div>
           <div className="p1">
