@@ -14,7 +14,7 @@ module.exports = React.createClass({
     console.log('updateClip');
     var active = !this.state.active;
     this.setState({ active: active }, function() {
-      this.props.updateClip(this.state.active);
+      this.props.updateClip(this.state.active ? 1 : 0);
     });
   },
 

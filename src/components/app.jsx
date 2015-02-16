@@ -16,6 +16,7 @@ module.exports = React.createClass({
       loopLength: 16,
       tempo: 120,
       currentStep: 0,
+      volume: .0625,
       buffers: null,
       mixer: null,
       clips: [],
@@ -35,12 +36,11 @@ module.exports = React.createClass({
     var clips = [];
     for (var i = 0; i < 8; i++) {
       clips[i] = bumpkit.createClip();
-      clips[i].pattern = [
-        1,0,0,0,
-        1,0,0,0,
-        1,0,0,0,
-        1,0,0,0
-      ];
+      clips[i].pattern = [];
+      for (var j = 0; j < 16; j++) {
+        clips[i].pattern.push( Math.round(Math.random()) );
+      }
+      console.log(clips[i].pattern);
     }
     return clips;
   },
@@ -50,7 +50,7 @@ module.exports = React.createClass({
     for (var i = 0; i < 8; i++) {
       var beep = bumpkit.createBeep({
         duration: .25,
-        frequency: 256 * i,
+        frequency: 64 * i,
       });
       samplers[i] = beep;
     }
@@ -67,6 +67,47 @@ module.exports = React.createClass({
       sampler.connect(track);
     }
   },
+
+  addStepListener: function() {
+    if (!window) return false;
+    var self = this;
+    window.addEventListener('step', function(e) {
+      var step = e.detail.step
+      self.setState({ currentStep: step });
+    });
+  },
+
+  playPause: function() {
+    if (!bumpkit) return false;
+    bumpkit.playPause();
+    this.setState({
+      isPlaying: bumpkit.isPlaying
+    });
+  },
+
+  loadBuffer: function(url) {
+    bumpkit.loadBuffer(url);
+  },
+
+  handleTempoChange: function(e) {
+    var self = this;
+    var tempo = e.target.value;
+    bumpkit.tempo = tempo
+    this.setState({ tempo: bumpkit.tempo }, function() {
+      // Fix this in Bumpkit
+      if (self.state.isPlaying) {
+        self.state.mixer.master.mute.gain.value = 0;
+        self.playPause();
+        self.playPause();
+        self.state.mixer.master.mute.gain.value = 1;
+      }
+    });
+  },
+
+  updateClips: function(clips) {
+    this.setState({ clips: clips });
+  },
+
 
   componentDidMount: function() {
     var self = this;
@@ -92,39 +133,15 @@ module.exports = React.createClass({
     this.addStepListener();
   },
 
-  addStepListener: function() {
-    if (!window) return false;
-    var self = this;
-    window.addEventListener('step', function(e) {
-      var step = e.detail.step
-      self.setState({ currentStep: step });
-    });
-  },
-
-  playPause: function() {
-    if (!bumpkit) return false;
-    bumpkit.playPause();
-    this.setState({
-      isPlaying: bumpkit.isPlaying
-    });
-  },
-
-  loadBuffer: function(url) {
-    bumpkit.loadBuffer(url);
-  },
-
-  handleTempoChange: function(e) {
-    var tempo = e.target.value;
-    bumpkit.tempo = tempo
-    this.setState({ tempo: bumpkit.tempo });
-  },
 
   render: function() {
     return (
       <div className="px2">
         <Toolbar {...this.props} {...this.state}
           playPause={this.playPause}
-          handleTempoChange={this.handleTempoChange} />
+          handleTempoChange={this.handleTempoChange}
+          updateClips={this.updateClips}
+          />
         <Sequencer {...this.props} {...this.state} />
       </div>
     )

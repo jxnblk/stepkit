@@ -3,31 +3,21 @@
 var React = require('react');
 
 var stepFilter = require('../util/step-filter');
-var Trigger = require('./trigger.jsx');
+var TriggerRow = require('./trigger-row.jsx');
 
 module.exports = React.createClass({
 
-  renderTrigger: function(step, i) {
-    var active = (step > 0);
-    var updateClip = function(value) {
-      console.log('updateClip', value, i);
-    };
-    var beat = stepFilter(i + 1);
-    var current = (this.props.currentStep == i);
-    return (
-      <div className="flex-auto flex px1">
-        <Trigger active={active}
-          current={current}
-          updateClip={updateClip} />
-      </div>
-    )
-  },
-
   renderRow: function(clip, i) {
+    var self = this;
+    var updateClip = function(clip) {
+      var clips = self.props.clips;
+      clips[i] = clip;
+      self.props.updateClips(clips);
+    };
     return (
-      <div className="flex flex-center mxn1 mb1">
-        {clip.pattern.map(this.renderTrigger)}
-      </div>
+      <TriggerRow clip={clip}
+        updateClip={updateClip}
+        track={i} />
     )
   },
 
