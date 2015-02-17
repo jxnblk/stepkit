@@ -32,15 +32,17 @@ module.exports = React.createClass({
               style={tempoInputStyle}
               className="m0 field-dark" />
           </div>
+          <div className="h5 bold p1">
+            {currentStep}
+          </div>
           {/*
             <h1 className="h3 m0 px1">Stepkit</h1>
+          */}
+          {/*
             <div className="h5 bold p1">
-              {currentStep}
+              {currentKit}
             </div>
           */}
-          <div className="h5 bold p1">
-            {currentKit}
-          </div>
           <div className="flex-auto" />
           <div className="flex flex-center p1">
             <label className="h5 bold mr1">Pattern</label>
