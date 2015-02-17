@@ -16,9 +16,9 @@ module.exports = React.createClass({
     return {
       isPlaying: false,
       loopLength: 16,
-      tempo: 120,
+      tempo: 96,
       currentStep: 0,
-      volume: .75,
+      volume: 1,
       buffers: [],
       mixer: null,
       clips: [],
@@ -183,6 +183,7 @@ module.exports = React.createClass({
   initBumpkit: function() {
     var self = this;
     if (!bumpkit) { return false; }
+    this.setTempo(this.state.tempo);
     bumpkit.loopLength = this.state.loopLength;
     var mixer = this.initMixer();
     var clips = this.initClips();
@@ -192,7 +193,6 @@ module.exports = React.createClass({
       clips: clips,
       samplers: samplers,
       isPlaying: bumpkit.isPlaying,
-      tempo: bumpkit.tempo,
     }, function() {
       self.initConnections();
       self.loadBank(0);
@@ -210,6 +210,19 @@ module.exports = React.createClass({
       var params = qs.parse(window.location.search);
     }
     this.initBumpkit();
+    if (document) {
+      document.onkeydown = function(e) {
+        //console.log(e.which);
+        switch (e.which) {
+          case 32:
+            e.preventDefault();
+            self.playPause();
+            break;
+          default:
+            break;
+        }
+      };
+    }
   },
 
 
