@@ -5,6 +5,7 @@ var React = require('react');
 module.exports = React.createClass({
 
   handleChange: function(e) {
+    this.props.loadKit(e.target.value);
   },
 
   render: function() {
@@ -19,7 +20,8 @@ module.exports = React.createClass({
       return options;
     };
     return (
-      <select className="m0 field-dark">
+      <select className="m0 field-dark"
+        onChange={this.handleChange}>
         {options()}
       </select>
     )

@@ -54,8 +54,12 @@ module.exports = React.createClass({
       var steps = [];
       for (var i = 0; i < 16; i++) {
         var current = (i == currentStep);
-        var stepClass = 'h5 bold flex-auto px1 ';
-        stepClass += current ? 'red' : '';
+        var stepClass = 'h5 bold flex-auto px1 py1 ';
+        stepClass += current ? 'red ' : '';
+        if (!current) {
+          stepClass += i%4 ? 'muted ' : '';
+        }
+        //stepClass += i%4 ? '' : 'bg-darken-2';
         steps.push(
           <div className={stepClass}>
             {stepFilter(i)}
@@ -65,7 +69,7 @@ module.exports = React.createClass({
       return steps;
     }
     return (
-      <div className="flex flex-center mxn1 mb1">
+      <div className="flex flex-center mxn1">
         {renderSteps()}
       </div>
     )
@@ -73,7 +77,7 @@ module.exports = React.createClass({
 
   render: function() {
     return (
-      <div className="py2">
+      <div className="flex-auto px2 ">
         {this.renderXAxis()}
         {this.props.clips.map(this.renderRow)}
       </div>

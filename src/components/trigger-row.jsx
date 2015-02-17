@@ -17,8 +17,11 @@ module.exports = React.createClass({
     };
     var beat = stepFilter(i + 1);
     var current = (this.props.currentStep == i);
+    var cellClass = 'flex-auto flex px1 py1 ';
+    //cellClass += i%4 ? '' : 'bg-darken-2';
+    cellClass += (!active && i%4) ? 'muted' : '';
     return (
-      <div className="flex-auto flex px1">
+      <div className={cellClass}>
         <Trigger
           {...this.props}
           active={active}
@@ -31,7 +34,7 @@ module.exports = React.createClass({
   render: function() {
     var clip = this.props.clip;
     return (
-      <div className="flex flex-center mxn1 mb1">
+      <div className="flex flex-center mxn1 ">
         {clip.pattern.map(this.renderTrigger)}
       </div>
     )

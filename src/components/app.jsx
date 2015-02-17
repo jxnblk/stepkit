@@ -8,6 +8,7 @@ var bumpkit = require('../bumpkit');
 
 var Toolbar = require('./toolbar.jsx');
 var Sequencer = require('./sequencer.jsx');
+var Footer = require('./footer.jsx');
 
 module.exports = React.createClass({
 
@@ -18,10 +19,11 @@ module.exports = React.createClass({
       tempo: 120,
       currentStep: 0,
       volume: .75,
-      buffers: null,
+      buffers: [],
       mixer: null,
       clips: [],
       samplers: [],
+      currentKit: 0,
     }
   },
 
@@ -61,26 +63,10 @@ module.exports = React.createClass({
       clips[j].pattern = track.pattern;
     });
     this.updateClips(clips);
-  },
-
-  initBuffers: function() {
-    var self = this;
-    var deferred = Q.defer();
-    var kit = this.props.kits[0];
-    var samples = kit.samples;
-    samples.forEach(function(sample, i) {
-      (function(index) {
-        var url = self.props.audio_path + kit.path + '/' + sample;
-        bumpkit.loadBuffer(url, function(buffer) {
-          bumpkit.buffers[index] = buffer;
-          delete bumpkit.buffers[url];
-          if ( samples.length <= Object.keys(bumpkit.buffers).length ) {
-            deferred.resolve();
-          }
-        });
-      })(i);
-    })
-    return deferred.promise;
+    var tempo = bank.tempo || false;
+    if (tempo) {
+      this.setTempo(tempo);
+    }
   },
 
   initSamplers: function() {
@@ -108,14 +94,40 @@ module.exports = React.createClass({
     }
   },
 
+  loadBuffers: function() {
+    var self = this;
+    var deferred = Q.defer();
+    var kit = this.props.kits[this.state.currentKit];
+    var samples = kit.samples;
+    var buffers = this.state.buffers;
+    bumpkit.buffers = {};
+    samples.forEach(function(sample, i) {
+      (function(index) {
+        var url = self.props.audio_path + kit.path + '/' + sample;
+        bumpkit.loadBuffer(url, function(buffer) {
+          buffers[index] = buffer;
+          buffers[index].url = url;
+          if ( samples.length <= Object.keys(bumpkit.buffers).length ) {
+            self.setState({ buffers: buffers }, function() {
+              deferred.resolve();
+            });
+          }
+        });
+      })(i);
+    })
+    return deferred.promise;
+  },
+
   loadSamplers: function() {
+    var self = this;
     var samplers = this.state.samplers;
-    var bufferKeys = Object.keys(bumpkit.buffers);
+    var bufferKeys = Object.keys(this.state.buffers);
     bufferKeys.forEach(function(key, i) {
-      samplers[i].buffer(bumpkit.buffers[key]);
+      samplers[i].buffer(self.state.buffers[key]);
     });
-    this.setState({ samplers: samplers });
-    //console.log('samplers loaded');
+    this.setState({ samplers: samplers }, function() {
+      console.log('samplers loaded');
+    });
   },
 
   addStepListener: function() {
@@ -135,18 +147,24 @@ module.exports = React.createClass({
     });
   },
 
-  loadBuffer: function(url) {
-    bumpkit.loadBuffer(url);
-  },
-
   loadKit: function(i) {
-    console.log('load kit ' + i + ' placeholder');
+    var self = this;
+    this.setState({ currentKit: i }, function() {
+      self.loadBuffers().then(function() {
+        self.loadSamplers();
+      });;
+    });
   },
 
   handleTempoChange: function(e) {
     var self = this;
     var tempo = e.target.value;
-    bumpkit.tempo = tempo
+    this.setTempo(tempo);
+  },
+
+  setTempo: function(n) {
+    var self = this;
+    bumpkit.tempo = n
     this.setState({ tempo: bumpkit.tempo }, function() {
       // Fix this in Bumpkit
       if (self.state.isPlaying) {
@@ -162,12 +180,8 @@ module.exports = React.createClass({
     this.setState({ clips: clips });
   },
 
-
-  componentDidMount: function() {
+  initBumpkit: function() {
     var self = this;
-    if (window) {
-      var params = qs.parse(window.location.search);
-    }
     if (!bumpkit) { return false; }
     bumpkit.loopLength = this.state.loopLength;
     var mixer = this.initMixer();
@@ -182,30 +196,41 @@ module.exports = React.createClass({
     }, function() {
       self.initConnections();
       self.loadBank(0);
-      //self.randomizePatterns();
-      self.initBuffers().then(function() {
-        //console.log('buffers loaded', bumpkit.buffers);
+      self.loadBuffers().then(function() {
         self.loadSamplers();
       });;
     });
     this.state.mixer.master.volume.gain.value = this.state.volume;
-    //console.log('test volume', this.state.mixer.master.volume.gain.value);
     this.addStepListener();
+  },
+
+  componentDidMount: function() {
+    var self = this;
+    if (window) {
+      var params = qs.parse(window.location.search);
+    }
+    this.initBumpkit();
   },
 
 
   render: function() {
+    var containerStyle = {
+      minHeight: '100vh'
+    };
     return (
-      <div className="px2">
+      <div className="flex flex-column"
+        style={containerStyle}>
         <Toolbar {...this.props} {...this.state}
           playPause={this.playPause}
           handleTempoChange={this.handleTempoChange}
           loadBank={this.loadBank}
+          loadKit={this.loadKit}
           randomize={this.randomizePatterns}
           />
         <Sequencer {...this.props} {...this.state}
           updateClips={this.updateClips}
-        />
+          />
+        <Footer {...this.props} />
       </div>
     )
   }

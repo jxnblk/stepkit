@@ -50,6 +50,20 @@
         "stab02.mp3",
         "stab03.mp3"
       ]
+    },
+    {
+      "name": "Dusty",
+      "path": "/dusty",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "clicks.mp3",
+        "hat.mp3",
+        "vocal-1.mp3",
+        "vocal-2.mp3",
+        "vocal-3.mp3",
+        "vocal-4.mp3"
+      ]
     }
   ]
 }
