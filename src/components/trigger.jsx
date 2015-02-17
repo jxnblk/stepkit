@@ -25,8 +25,9 @@ module.exports = React.createClass({
   render: function() {
     var self = this;
     var buttonClass = 'flex-auto button-outline ';
-    buttonClass += this.props.current ? 'red bg-red ' : 'blue ';
-    if (!this.props.current) {
+    if (this.props.current) {
+      buttonClass += (this.props.active) ? 'red bg-red ' : 'red bg-red muted ';
+    } else {
       buttonClass += (this.props.active) ? 'bg-blue ' : '';
     }
     var buttonStyle = {

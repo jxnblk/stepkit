@@ -16,7 +16,7 @@ module.exports = React.createClass({
     var currentStep = stepFilter(this.props.currentStep);
     var currentKit = this.props.kits[this.props.currentKit].name;
     return (
-      <header className="xborder-bottom border-2 border-lighten bg-darken-2 px2">
+      <header className="xborder-bottom border-2 border-lighten bg-darken-2 px2 py1">
         <div className="flex flex-center flex-wrap mxn1">
           <div className="px1 py1">
             <button className="h3 button-outline blue"
