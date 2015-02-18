@@ -80,6 +80,36 @@
       ]
     },
     {
+      "name": "808",
+      "path": "/808",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "clap.mp3",
+        "hihat.mp3",
+        "rim.mp3",
+        "maracas.mp3",
+        "cowbell.mp3",
+        "clave.mp3"
+      ]
+    },
+    {
+      "name": "909",
+      "path": "/909",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "clap.mp3",
+        "hihat.mp3",
+        "hihat-open.mp3",
+        "tom-low.mp3",
+        "tom-mid.mp3",
+        "tom-hi.mp3"
+      ]
+    }
+  ],
+  "test-kits": [
+    {
       "name": "Let Go",
       "path": "/let-go",
       "samples": [
