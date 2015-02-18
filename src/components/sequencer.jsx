@@ -60,8 +60,9 @@ module.exports = React.createClass({
           stepClass += i%4 ? 'muted ' : '';
         }
         //stepClass += i%4 ? '' : 'bg-darken-2';
+        var axisStepKey = 'axis-step-' + i;
         steps.push(
-          <div className={stepClass}>
+          <div key={axisStepKey} className={stepClass}>
             {stepFilter(i)}
           </div>
         )

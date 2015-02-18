@@ -13,8 +13,9 @@ module.exports = React.createClass({
     var options = function() {
       var options = [];
       banks.forEach(function(bank, i) {
+        var optionKey = 'bank-option-' + i;
         options.push(
-          <option value={i}>{bank.name}</option>
+          <option key={optionKey} value={i}>{bank.name}</option>
         )
       });
       return options;

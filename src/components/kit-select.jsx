@@ -13,8 +13,9 @@ module.exports = React.createClass({
     var options = function() {
       var options = [];
       kits.forEach(function(kit, i) {
+        var optionKey = 'kit-option-' + i
         options.push(
-          <option value={i}>{kit.name}</option>
+          <option key={optionKey} value={i}>{kit.name}</option>
         )
       });
       return options;

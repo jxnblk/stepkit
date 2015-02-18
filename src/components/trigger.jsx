@@ -35,6 +35,7 @@ module.exports = React.createClass({
     };
     return (
       <button className={buttonClass}
+        key={this.props.step}
         title="Toggle step"
         style={buttonStyle}
         onMouseDown={this.handleMouseDown}

@@ -3,9 +3,9 @@
 var React = require('react');
 
 var stepFilter = require('../util/step-filter');
-var Icon = require('./icon.jsx');
 var KitSelect = require('./kit-select.jsx');
 var BankSelect = require('./bank-select.jsx');
+var Icon = require('./icon.jsx');
 
 module.exports = React.createClass({
 
@@ -35,14 +35,12 @@ module.exports = React.createClass({
           <div className="h5 bold p1">
             {currentStep}
           </div>
-          {/*
-            <h1 className="h3 m0 px1">Stepkit</h1>
-          */}
-          {/*
-            <div className="h5 bold p1">
+
+          {/* <h1 className="h3 m0 px1">Stepkit</h1> */}
+          {/* <div className="h5 bold p1">
               {currentKit}
-            </div>
-          */}
+            </div> */}
+
           <div className="flex-auto" />
           <div className="flex flex-center p1">
             <label className="h5 bold mr1">Pattern</label>
@@ -52,8 +50,8 @@ module.exports = React.createClass({
             <label className="h5 bold mr1">Kit</label>
             <KitSelect {...this.props} />
           </div>
-          {/*
-          <div className="p1">
+
+          {/* <div className="p1">
             <button className="button-small button-outline gray"
               onClick={this.props.randomize}>
               Randomize
@@ -64,8 +62,8 @@ module.exports = React.createClass({
           </div>
           <div className="p1">
             <button className="button-small button-outline blue">Save</button>
-          </div>
-          */}
+          </div> */}
+
         </div>
       </header>
     )

@@ -20,12 +20,14 @@ module.exports = React.createClass({
     var cellClass = 'flex-auto flex px1 py1 ';
     //cellClass += i%4 ? '' : 'bg-darken-2';
     cellClass += (!active && i%4) ? 'muted' : '';
+    var triggerKey = 'trigger-' + i;
     return (
-      <div className={cellClass}>
+      <div key={triggerKey} className={cellClass}>
         <Trigger
           {...this.props}
           active={active}
           current={current}
+          step={i}
           updateClip={updateClip} />
       </div>
     )
@@ -33,8 +35,9 @@ module.exports = React.createClass({
 
   render: function() {
     var clip = this.props.clip;
+    var key = 'row-' + this.props.track;
     return (
-      <div className="flex flex-center mxn1 ">
+      <div key={key} className="flex flex-center mxn1 ">
         {clip.pattern.map(this.renderTrigger)}
       </div>
     )
