@@ -20,7 +20,7 @@ module.exports = React.createClass({
       <header className="xborder-bottom xborder-thick xborder-bright-blue px2">
         <div className="flex flex-center flex-wrap mxn1 py1">
           <div className="px1 py1">
-            <button className="h3 button-outline blue border-thick"
+            <button className="h3 button-outline bright-blue border-thick"
               onClick={this.props.playPause}>
               <Icon icon={playPauseIcon} />
             </button>

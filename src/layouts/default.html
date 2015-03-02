@@ -16,21 +16,16 @@
   <link rel="stylesheet" href="http://d2v52k3cl9vedd.cloudfront.net/monobass/1.0.2/monobass.min.css">
   <style>
     body { -webkit-font-smoothing: antialiased }
-    .dark-gray { color: #222629 }
-    .bg-dark-gray { background-color: #222629 }
     .icon { top: .125em }
-    .muted { opacity: .5 }
     .bright-red { color: #f32 }
     .bg-bright-red { background-color: #f32 }
-    .button-outline {
-      -webkit-transition-property: border, background;
-      transition-property: border, background;
+    .button-outline,
+    .button-outline:focus {
+      border-width: 2px;
     }
-    .blue { color: #30a4f9 }
-    .bg-blue { background-color: #30a4f9 }
   </style>
 </head>
-<body class="blue bg-dark-gray" style="min-width:768px">
+<body class="bright-blue bg-black" style="min-width:768px">
 
 <div id="app">
   <%= app %>

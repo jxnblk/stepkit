@@ -38,6 +38,7 @@ module.exports = React.createClass({
     };
     return (
       <TriggerRow
+        {...this.props}
         {...this.state}
         clip={clip}
         setMouseDown={this.setMouseDown}
@@ -49,10 +50,11 @@ module.exports = React.createClass({
   },
 
   renderXAxis: function() {
+    var self = this;
     var currentStep = this.props.currentStep
     var renderSteps = function() {
       var steps = [];
-      for (var i = 0; i < 16; i++) {
+      for (var i = 0; i < self.props.loopLength; i++) {
         var current = (i == currentStep);
         var stepClass = 'h5 bold flex-auto px1 py1 ';
         stepClass += current ? 'red ' : '';
@@ -60,9 +62,14 @@ module.exports = React.createClass({
           stepClass += i%4 ? 'muted ' : '';
         }
         //stepClass += i%4 ? '' : 'bg-darken-2';
+        var stepStyle = {
+          width: (1/self.props.loopLength) + '%'
+        };
         var axisStepKey = 'axis-step-' + i;
         steps.push(
-          <div key={axisStepKey} className={stepClass}>
+          <div key={axisStepKey}
+            className={stepClass}
+            style={stepStyle}>
             {stepFilter(i)}
           </div>
         )
@@ -77,10 +84,19 @@ module.exports = React.createClass({
   },
 
   render: function() {
+    var innerStyle = {
+      width: (100 * (this.props.loopLength / 16)) + '%',
+      marginLeft: (-100 * this.props.currentPage) + '%',
+      transition: 'margin .125s ease-in-out'
+    };
     return (
-      <div className="flex-auto px2 ">
-        {this.renderXAxis()}
-        {this.props.clips.map(this.renderRow)}
+      <div className="flex-auto px2">
+        <div className="overflow-hidden">
+          <div style={innerStyle}>
+            {this.renderXAxis()}
+            {this.props.clips.map(this.renderRow)}
+          </div>
+        </div>
       </div>
     )
   }

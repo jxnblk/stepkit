@@ -20361,7 +20361,7 @@ module.exports = warning;
 module.exports = require('./lib/React');
 
 },{"./lib/React":"/Users/jackson/Repos/stepkit/node_modules/react/lib/React.js"}],"/Users/jackson/Repos/stepkit/package.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
   "name": "stepkit",
   "version": "0.0.1",
   "description": "stepkit",
@@ -20580,7 +20580,6 @@ module.exports = bumpkit;
 
 
 },{"bumpkit":"/Users/jackson/Repos/stepkit/node_modules/bumpkit/dist/bumpkit.min.js"}],"/Users/jackson/Repos/stepkit/src/components/app.jsx":[function(require,module,exports){
-/** @jsx React.DOM */
 
 var React = require('react');
 var qs = require('query-string');
@@ -20590,6 +20589,7 @@ var bumpkit = require('../bumpkit');
 
 var Toolbar = require('./toolbar.jsx');
 var Sequencer = require('./sequencer.jsx');
+var Paginator = require('./paginator.jsx');
 var Footer = require('./footer.jsx');
 
 module.exports = React.createClass({displayName: "exports",
@@ -20607,6 +20607,7 @@ module.exports = React.createClass({displayName: "exports",
       samplers: [],
       currentKit: 1,
       currentBank: 2,
+      currentPage: 0,
     }
   },
 
@@ -20643,7 +20644,17 @@ module.exports = React.createClass({displayName: "exports",
     var bank = this.props.banks[i];
     var clips = this.state.clips;
     bank.tracks.forEach(function(track, j) {
-      clips[j].pattern = track.pattern;
+      var pattern = track.pattern;
+      function dupeBars() {
+        pattern = pattern.concat(pattern);
+        if (pattern.length < 64) {
+          dupeBars();
+        }
+      }
+      if (pattern.length < 64) {
+        dupeBars();
+      }
+      clips[j].pattern = pattern;
     });
     this.updateClips(clips);
     var tempo = bank.tempo || false;
@@ -20764,6 +20775,38 @@ module.exports = React.createClass({displayName: "exports",
     });
   },
 
+  setLoopLength: function(n) {
+    bumpkit.loopLength = n;
+    this.setState({ loopLength: n }, function() {
+      this.updateUrlParams();
+      if (n < this.state.currentPage * 16) {
+        this.setState({ currentPage: n / 16 - 1 });
+      }
+    });
+  },
+
+  previousPage: function() {
+    var totalPages = this.state.loopLength / 16 - 1;
+    var page = this.state.currentPage;
+    if (page > 0) {
+      page--;
+    } else {
+      page = totalPages;
+    }
+    this.setState({ currentPage: page });
+  },
+
+  nextPage: function() {
+    var totalPages = this.state.loopLength / 16 - 1;
+    var page = this.state.currentPage;
+    if (page < totalPages) {
+      page++;
+    } else {
+      page = 0;
+    }
+    this.setState({ currentPage: page });
+  },
+
   updateClips: function(clips) {
     this.setState({ clips: clips });
   },
@@ -20798,6 +20841,7 @@ module.exports = React.createClass({displayName: "exports",
       tempo: this.state.tempo,
       currentKit: this.state.currentKit,
       currentBank: this.state.currentBank,
+      loopLength: this.state.loopLength,
     };
     var query = '?' + qs.stringify(params);
     window.history.pushState(params, 'Stepkit', query);
@@ -20843,6 +20887,11 @@ module.exports = React.createClass({displayName: "exports",
         React.createElement(Sequencer, React.__spread({},  this.props,  this.state, 
           {updateClips: this.updateClips})
           ), 
+        React.createElement(Paginator, React.__spread({},  this.props,  this.state, 
+          {previousPage: this.previousPage, 
+          nextPage: this.nextPage, 
+          setLoopLength: this.setLoopLength})
+          ), 
         React.createElement(Footer, React.__spread({},  this.props))
       )
     )
@@ -20853,7 +20902,7 @@ module.exports = React.createClass({displayName: "exports",
 
 
 
-},{"../bumpkit":"/Users/jackson/Repos/stepkit/src/bumpkit.js","./footer.jsx":"/Users/jackson/Repos/stepkit/src/components/footer.jsx","./sequencer.jsx":"/Users/jackson/Repos/stepkit/src/components/sequencer.jsx","./toolbar.jsx":"/Users/jackson/Repos/stepkit/src/components/toolbar.jsx","q":"/Users/jackson/Repos/stepkit/node_modules/q/q.js","query-string":"/Users/jackson/Repos/stepkit/node_modules/query-string/query-string.js","react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/bank-select.jsx":[function(require,module,exports){
+},{"../bumpkit":"/Users/jackson/Repos/stepkit/src/bumpkit.js","./footer.jsx":"/Users/jackson/Repos/stepkit/src/components/footer.jsx","./paginator.jsx":"/Users/jackson/Repos/stepkit/src/components/paginator.jsx","./sequencer.jsx":"/Users/jackson/Repos/stepkit/src/components/sequencer.jsx","./toolbar.jsx":"/Users/jackson/Repos/stepkit/src/components/toolbar.jsx","q":"/Users/jackson/Repos/stepkit/node_modules/q/q.js","query-string":"/Users/jackson/Repos/stepkit/node_modules/query-string/query-string.js","react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/bank-select.jsx":[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -20994,7 +21043,61 @@ module.exports = React.createClass({displayName: "exports",
 
 
 
-},{"react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/sequencer.jsx":[function(require,module,exports){
+},{"react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/paginator.jsx":[function(require,module,exports){
+
+var React = require('react');
+
+var Icon = require('./icon.jsx');
+
+module.exports = React.createClass({displayName: "exports",
+
+  handleLoopLengthChange: function(e) {
+    this.props.setLoopLength(e.target.value);
+  },
+
+  render: function() {
+    var options = [
+      { value: 16, title: '1 Bar' },
+      { value: 32, title: '2 Bars' },
+      { value: 64, title: '4 Bars' },
+    ];
+    var renderOption = function(option) {
+      return React.createElement("option", {key: 'loop-length-' + option.value, value: option.value}, option.title)
+    };
+    return (
+      React.createElement("div", {className: "px2 py2"}, 
+        React.createElement("div", {className: "flex flex-center mxn2"}, 
+          React.createElement("div", {className: "flex-auto"}), 
+          React.createElement("label", {htmlFor: "bar-length", className: "hide"}, 
+            "Loop Length"
+          ), 
+          React.createElement("select", {id: "bar-length", 
+            value: this.props.loopLength, 
+            className: "px2 m0 field-dark", 
+            onChange: this.handleLoopLengthChange}, 
+            options.map(renderOption)
+          ), 
+          React.createElement("div", {className: "px2"}, 
+            React.createElement("button", {onClick: this.props.previousPage, 
+              className: "button-outline rounded-left border-thick"}, 
+              React.createElement(Icon, {icon: "chevronLeft"})
+            ), 
+            React.createElement("button", {onClick: this.props.nextPage, 
+              className: "button-outline rounded-right border-thick"}, 
+              React.createElement(Icon, {icon: "chevronRight"})
+            )
+          )
+        )
+      )
+    )
+  }
+
+});
+
+
+
+
+},{"./icon.jsx":"/Users/jackson/Repos/stepkit/src/components/icon.jsx","react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/sequencer.jsx":[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -21035,6 +21138,7 @@ module.exports = React.createClass({displayName: "exports",
     };
     return (
       React.createElement(TriggerRow, React.__spread({}, 
+        this.props, 
         this.state, 
         {clip: clip, 
         setMouseDown: this.setMouseDown, 
@@ -21046,10 +21150,11 @@ module.exports = React.createClass({displayName: "exports",
   },
 
   renderXAxis: function() {
+    var self = this;
     var currentStep = this.props.currentStep
     var renderSteps = function() {
       var steps = [];
-      for (var i = 0; i < 16; i++) {
+      for (var i = 0; i < self.props.loopLength; i++) {
         var current = (i == currentStep);
         var stepClass = 'h5 bold flex-auto px1 py1 ';
         stepClass += current ? 'red ' : '';
@@ -21057,9 +21162,14 @@ module.exports = React.createClass({displayName: "exports",
           stepClass += i%4 ? 'muted ' : '';
         }
         //stepClass += i%4 ? '' : 'bg-darken-2';
+        var stepStyle = {
+          width: (1/self.props.loopLength) + '%'
+        };
         var axisStepKey = 'axis-step-' + i;
         steps.push(
-          React.createElement("div", {key: axisStepKey, className: stepClass}, 
+          React.createElement("div", {key: axisStepKey, 
+            className: stepClass, 
+            style: stepStyle}, 
             stepFilter(i)
           )
         )
@@ -21074,10 +21184,19 @@ module.exports = React.createClass({displayName: "exports",
   },
 
   render: function() {
+    var innerStyle = {
+      width: (100 * (this.props.loopLength / 16)) + '%',
+      marginLeft: (-100 * this.props.currentPage) + '%',
+      transition: 'margin .125s ease-in-out'
+    };
     return (
-      React.createElement("div", {className: "flex-auto px2 "}, 
-        this.renderXAxis(), 
-        this.props.clips.map(this.renderRow)
+      React.createElement("div", {className: "flex-auto px2"}, 
+        React.createElement("div", {className: "overflow-hidden"}, 
+          React.createElement("div", {style: innerStyle}, 
+            this.renderXAxis(), 
+            this.props.clips.map(this.renderRow)
+          )
+        )
       )
     )
   }
@@ -21110,7 +21229,7 @@ module.exports = React.createClass({displayName: "exports",
       React.createElement("header", {className: "xborder-bottom xborder-thick xborder-bright-blue px2"}, 
         React.createElement("div", {className: "flex flex-center flex-wrap mxn1 py1"}, 
           React.createElement("div", {className: "px1 py1"}, 
-            React.createElement("button", {className: "h3 button-outline blue border-thick", 
+            React.createElement("button", {className: "h3 button-outline bright-blue border-thick", 
               onClick: this.props.playPause}, 
               React.createElement(Icon, {icon: playPauseIcon})
             )
@@ -21177,6 +21296,7 @@ var Trigger = require('./trigger.jsx');
 module.exports = React.createClass({displayName: "exports",
 
   renderTrigger: function(step, i) {
+    if (i >= this.props.loopLength) { return false }
     var self = this;
     var active = (step > 0);
     var clip = this.props.clip;
@@ -21190,8 +21310,12 @@ module.exports = React.createClass({displayName: "exports",
     //cellClass += i%4 ? '' : 'bg-darken-2';
     cellClass += (!active && i%4) ? 'muted' : '';
     var triggerKey = 'trigger-' + i;
+    var cellStyle = {
+      width: (1/this.props.loopLength) + '%'
+    };
     return (
-      React.createElement("div", {key: triggerKey, className: cellClass}, 
+      React.createElement("div", {key: triggerKey, 
+        className: cellClass, style: cellStyle}, 
         React.createElement(Trigger, React.__spread({}, 
           this.props, 
           {active: active, 
@@ -21206,7 +21330,7 @@ module.exports = React.createClass({displayName: "exports",
     var clip = this.props.clip;
     var key = 'row-' + this.props.track;
     return (
-      React.createElement("div", {key: key, className: "flex flex-center mxn1 "}, 
+      React.createElement("div", {key: key, className: "flex flex-center mxn1"}, 
         clip.pattern.map(this.renderTrigger)
       )
     )
@@ -21248,7 +21372,7 @@ module.exports = React.createClass({displayName: "exports",
     if (this.props.current) {
       buttonClass += (this.props.active) ? 'red bg-red ' : 'red bg-red muted ';
     } else {
-      buttonClass += (this.props.active) ? 'bg-blue ' : '';
+      buttonClass += (this.props.active) ? 'bg-bright-blue ' : '';
     }
     var buttonStyle = {
       height: '3rem'
@@ -21279,14 +21403,14 @@ data.banks = [
   {
     name: 'Init',
     tracks: [
-      { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
-      { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
-      { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
-      { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
-      { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
-      { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
-      { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
-      { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,  0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
     ]
   },
   {

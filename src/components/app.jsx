@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 
 var React = require('react');
 var qs = require('query-string');
@@ -8,6 +7,7 @@ var bumpkit = require('../bumpkit');
 
 var Toolbar = require('./toolbar.jsx');
 var Sequencer = require('./sequencer.jsx');
+var Paginator = require('./paginator.jsx');
 var Footer = require('./footer.jsx');
 
 module.exports = React.createClass({
@@ -25,6 +25,7 @@ module.exports = React.createClass({
       samplers: [],
       currentKit: 1,
       currentBank: 2,
+      currentPage: 0,
     }
   },
 
@@ -61,7 +62,17 @@ module.exports = React.createClass({
     var bank = this.props.banks[i];
     var clips = this.state.clips;
     bank.tracks.forEach(function(track, j) {
-      clips[j].pattern = track.pattern;
+      var pattern = track.pattern;
+      function dupeBars() {
+        pattern = pattern.concat(pattern);
+        if (pattern.length < 64) {
+          dupeBars();
+        }
+      }
+      if (pattern.length < 64) {
+        dupeBars();
+      }
+      clips[j].pattern = pattern;
     });
     this.updateClips(clips);
     var tempo = bank.tempo || false;
@@ -182,6 +193,38 @@ module.exports = React.createClass({
     });
   },
 
+  setLoopLength: function(n) {
+    bumpkit.loopLength = n;
+    this.setState({ loopLength: n }, function() {
+      this.updateUrlParams();
+      if (n < this.state.currentPage * 16) {
+        this.setState({ currentPage: n / 16 - 1 });
+      }
+    });
+  },
+
+  previousPage: function() {
+    var totalPages = this.state.loopLength / 16 - 1;
+    var page = this.state.currentPage;
+    if (page > 0) {
+      page--;
+    } else {
+      page = totalPages;
+    }
+    this.setState({ currentPage: page });
+  },
+
+  nextPage: function() {
+    var totalPages = this.state.loopLength / 16 - 1;
+    var page = this.state.currentPage;
+    if (page < totalPages) {
+      page++;
+    } else {
+      page = 0;
+    }
+    this.setState({ currentPage: page });
+  },
+
   updateClips: function(clips) {
     this.setState({ clips: clips });
   },
@@ -216,6 +259,7 @@ module.exports = React.createClass({
       tempo: this.state.tempo,
       currentKit: this.state.currentKit,
       currentBank: this.state.currentBank,
+      loopLength: this.state.loopLength,
     };
     var query = '?' + qs.stringify(params);
     window.history.pushState(params, 'Stepkit', query);
@@ -260,6 +304,11 @@ module.exports = React.createClass({
           />
         <Sequencer {...this.props} {...this.state}
           updateClips={this.updateClips}
+          />
+        <Paginator {...this.props} {...this.state}
+          previousPage={this.previousPage}
+          nextPage={this.nextPage}
+          setLoopLength={this.setLoopLength}
           />
         <Footer {...this.props} />
       </div>

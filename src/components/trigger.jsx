@@ -28,7 +28,7 @@ module.exports = React.createClass({
     if (this.props.current) {
       buttonClass += (this.props.active) ? 'red bg-red ' : 'red bg-red muted ';
     } else {
-      buttonClass += (this.props.active) ? 'bg-blue ' : '';
+      buttonClass += (this.props.active) ? 'bg-bright-blue ' : '';
     }
     var buttonStyle = {
       height: '3rem'

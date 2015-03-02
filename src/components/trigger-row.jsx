@@ -8,6 +8,7 @@ var Trigger = require('./trigger.jsx');
 module.exports = React.createClass({
 
   renderTrigger: function(step, i) {
+    if (i >= this.props.loopLength) { return false }
     var self = this;
     var active = (step > 0);
     var clip = this.props.clip;
@@ -21,8 +22,12 @@ module.exports = React.createClass({
     //cellClass += i%4 ? '' : 'bg-darken-2';
     cellClass += (!active && i%4) ? 'muted' : '';
     var triggerKey = 'trigger-' + i;
+    var cellStyle = {
+      width: (1/this.props.loopLength) + '%'
+    };
     return (
-      <div key={triggerKey} className={cellClass}>
+      <div key={triggerKey}
+        className={cellClass} style={cellStyle}>
         <Trigger
           {...this.props}
           active={active}
@@ -37,7 +42,7 @@ module.exports = React.createClass({
     var clip = this.props.clip;
     var key = 'row-' + this.props.track;
     return (
-      <div key={key} className="flex flex-center mxn1 ">
+      <div key={key} className="flex flex-center mxn1">
         {clip.pattern.map(this.renderTrigger)}
       </div>
     )
