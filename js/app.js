@@ -20361,7 +20361,7 @@ module.exports = warning;
 module.exports = require('./lib/React');
 
 },{"./lib/React":"/Users/jackson/Repos/stepkit/node_modules/react/lib/React.js"}],"/Users/jackson/Repos/stepkit/package.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports={
   "name": "stepkit",
   "version": "0.0.1",
   "description": "stepkit",
@@ -20443,48 +20443,6 @@ module.exports=module.exports=module.exports=module.exports=module.exports=modul
       ]
     },
     {
-      "name": "808",
-      "path": "/808",
-      "samples": [
-        "kick.mp3",
-        "snare.mp3",
-        "clap.mp3",
-        "hihat.mp3",
-        "rim.mp3",
-        "maracas.mp3",
-        "cowbell.mp3",
-        "clave.mp3"
-      ]
-    },
-    {
-      "name": "909",
-      "path": "/909",
-      "samples": [
-        "kick.mp3",
-        "snare.mp3",
-        "clap.mp3",
-        "hihat.mp3",
-        "hihat-open.mp3",
-        "tom-low.mp3",
-        "tom-mid.mp3",
-        "tom-hi.mp3"
-      ]
-    },
-    {
-      "name": "Chip",
-      "path": "/chip",
-      "samples": [
-        "kick.mp3",
-        "snare.mp3",
-        "frog.mp3",
-        "noise.mp3",
-        "bong.mp3",
-        "bloop.mp3",
-        "bass.mp3",
-        "power-up.mp3"
-      ]
-    },
-    {
       "name": "Really",
       "path": "/really-wanna",
       "samples": [
@@ -20524,6 +20482,48 @@ module.exports=module.exports=module.exports=module.exports=module.exports=modul
         "vocal-2.mp3",
         "vocal-3.mp3",
         "vocal-4.mp3"
+      ]
+    },
+    {
+      "name": "808",
+      "path": "/808",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "clap.mp3",
+        "hihat.mp3",
+        "rim.mp3",
+        "maracas.mp3",
+        "cowbell.mp3",
+        "clave.mp3"
+      ]
+    },
+    {
+      "name": "909",
+      "path": "/909",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "clap.mp3",
+        "hihat.mp3",
+        "hihat-open.mp3",
+        "tom-low.mp3",
+        "tom-mid.mp3",
+        "tom-hi.mp3"
+      ]
+    },
+    {
+      "name": "Chip",
+      "path": "/chip",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "frog.mp3",
+        "noise.mp3",
+        "bong.mp3",
+        "bloop.mp3",
+        "bass.mp3",
+        "power-up.mp3"
       ]
     }
   ],
