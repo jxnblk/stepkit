@@ -2,6 +2,7 @@
 var React = require('react');
 
 var Icon = require('./icon.jsx');
+var DotIndicator = require('./dot-indicator.jsx');
 
 module.exports = React.createClass({
 
@@ -22,6 +23,7 @@ module.exports = React.createClass({
       <div className="px2 py2">
         <div className="flex flex-center mxn2">
           <div className="flex-auto" />
+          <DotIndicator {...this.props} />
           <label htmlFor="bar-length" className="hide">
             Loop Length
           </label>

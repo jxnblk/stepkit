@@ -63,6 +63,36 @@ process.umask = function() { return 0; };
 (function (global){
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var t;"undefined"!=typeof window?t=window:"undefined"!=typeof global?t=global:"undefined"!=typeof self&&(t=self),t.Bumpkit=e()}}(function(){return function e(t,n,r){function i(a,u){if(!n[a]){if(!t[a]){var c="function"==typeof require&&require;if(!u&&c)return c(a,!0);if(o)return o(a,!0);throw new Error("Cannot find module '"+a+"'")}var f=n[a]={exports:{}};t[a][0].call(f.exports,function(e){var n=t[a][1][e];return i(n?n:e)},f,f.exports,e,t,n,r)}return n[a].exports}for(var o="function"==typeof require&&require,a=0;a<r.length;a++)i(r[a]);return i}({1:[function(e,t){var n=function(){var e=this,t=e.createAnalyser();t.fftSize=32;var n=t.frequencyBinCount,r=new Uint8Array(n);return t.amp=function(){return t.getByteTimeDomainData(r),r[0]},t};t.exports={createAmplitudeAnalyser:n}},{}],2:[function(e,t){var n=function(e){var t=this,e=e||{},n=function(){this.duration=e.duration||.0625,this.output=e.connect||t.destination,this.envelope=function(){t.createGain()};var n=e.frequency||256;this.frequency=function(e){return e?(n=e,this):n},this.connect=function(e){return this.output=e,this},this.play=function(e){var e=e||t.currentTime,n=t.createOscillator(),r=t.createEdgeFader({when:e,duration:this.duration});return n.type=0,n.frequency.value=this.frequency(),n.connect(r),r.connect(this.output),t.trigger(n,{when:e,duration:this.duration}),this}};return new n};t.exports={createBeep:n}},{}],3:[function(e,t){var n=function(e){var e=e||{},t={};return t.output=e.connect||0,t.active=e.active||!0,t.pattern=e.pattern||[],t.connect=function(e){return t.output=e,t},t.play=function(e){return t.output.play(e),t},t.toggle=function(){return t.active=!t.active,t},window.addEventListener("step",function(e){var n=e.detail.step,r=e.detail.when;t.active&&1==t.pattern[n]&&t.play(r)}),t};t.exports={createClip:n}},{}],4:[function(e,t){var n=function(){var e=this;this.tempo=120,this.isPlaying=!1,this.loopLength=null,this.timeSignature=[4,4],this.stepResolution=16;var t=function(){return 60/e.tempo/4},n=0,r=0,i=0,o=new CustomEvent("step",{detail:{}}),a=function(t){if(!e.currentTime){e.createBufferSource()}o.detail.step=r,o.detail.when=t,window.dispatchEvent(o)},u=function(){for(var o=.1,c=25;n<e.currentTime+o;)a(n),n+=t(),r++,r==e.loopLength&&(r=0);i=setTimeout(function(){u()},c)},c=function(){e.isPlaying=!1,window.clearTimeout(i)};return this.playPause=function(){return e.isPlaying?c():(r=0,n=e.currentTime,u(),e.isPlaying=!e.isPlaying),this},this};t.exports=n},{}],5:[function(e,t){var n=function(e){var e=e||{},t=e.when||0,n=e.duration||0,r=e.fadeDuration||.005,i=this.createGain();return i.gain.linearRampToValueAtTime(0,this.currentTime+t),i.gain.linearRampToValueAtTime(1,this.currentTime+t+r),i.gain.linearRampToValueAtTime(1,this.currentTime+t+n-r),i.gain.linearRampToValueAtTime(0,this.currentTime+t+n),i};t.exports={createEdgeFader:n}},{}],6:[function(e,t){var n=e("./clock"),r=e("./mixer"),i=e("./clip"),o=e("./edge-fader"),a=e("./beep"),u=e("./sampler"),c=e("./peak-analyser"),f=e("./analyser"),s=function(){var e=new(window.AudioContext||window.webkitAudioContext||window.mozAudioContext);return e.trigger=function(e,t){var t={when:t.when||0,offset:t.offset||0,duration:t.duration||0};return e.start(t.when,t.offset||0),t.duration&&e.stop(t.when+t.duration),this},e.buffers={},e.loadBuffer=function(e,t){function n(n){i.decodeAudioData(n,function(n){i.buffers[e]=n,t&&t(n)})}function r(e,t){var n=new XMLHttpRequest;n.responseType="arraybuffer",n.open("GET",e,!0),n.send(),n.onload=function(){n.response||console.error("Could not load"),t(n.response)}}var i=this;return this.buffers[e]&&t&&t(this.buffers[e]),r(e,function(e){n(e)}),this},e.initClock=n,e.initClock(),e.createMixer=r.createMixer,e.createEdgeFader=o.createEdgeFader,e.createBeep=a.createBeep,e.createSampler=u.createSampler,e.createClip=i.createClip,e.createAmplitudeAnalyser=f.createAmplitudeAnalyser,e.analysePeaks=c.analysePeaks,e};t.exports=s},{"./analyser":1,"./beep":2,"./clip":3,"./clock":4,"./edge-fader":5,"./mixer":7,"./peak-analyser":8,"./sampler":9}],7:[function(e,t){var n=function(){var e=this,t={},n=function(){var t=e.createGain();return t.effectsNode=e.createGain(),t.mute=e.createGain(),t.volume=e.createGain(),t.effects=[],t.connect(t.effectsNode),t.effectsNode.connect(t.mute),t.mute.connect(t.volume),t.updateConnections=function(){if(t.effectsNode.disconnect(0),t.effects.length>0){t.effectsNode.connect(t.effects[0]);for(var e=0;e<t.effects.length-1;e++){console.log("multiple effects",e);var n=t.effects[e+1];t.effects[e].disconnect(0),t.effects[e].connect(n)}t.effects[t.effects.length-1].disconnect(0),t.effects[t.effects.length-1].connect(t.mute)}else t.effectsNode.connect(t.mute);return t},t.addEffect=function(e,n){var r=n||t.effects.length;return t.effects.splice(r,0,e),t.updateConnections(),t},t.removeEffect=function(e){return t.effects.splice(e,1),t.updateConnections(),t},t.connect=function(e){return t.volume.disconnect(0),t.volume.connect(e),t},t.toggleMute=function(){return t.mute.gain.value=1-t.mute.gain.value,t},t};return t.master=new n,t.master.connect(e.destination),t.tracks=[],t.addTrack=function(){var e=new n;return e.connect(t.master),t.tracks.push(e),t},t.removeTrack=function(e){return t.tracks.splice(e,1),t},t};t.exports={createMixer:n}},{}],8:[function(e,t){var n=function(e){for(var t=256,n=e.length/t,r=~~(n/10)||1,i=e.numberOfChannels,o=new Float32Array(t),a=0;i>a;a++)for(var u=e.getChannelData(a),c=0;t>c;c++){for(var f=~~(c*n),s=~~(f+n),l=0,d=f;s>d;d+=r){var p=u[d];p>l?l=p:-p>l&&(l=-p)}(0==a||l>o[c])&&(o[c]=l)}return o};t.exports={analysePeaks:n}},{}],9:[function(e,t){var n=function(e){var t=this,e=e||{},n=function(){this.output=e.connect||t.destination,this.offset=e.offset||0,this.duration=e.duration||.6;var n=e.buffer||0;this.buffer=function(e){return e?(n=e,this):n},this.connect=function(e){return this.output=e,this},this.play=function(e){var e=e||t.currentTime,n=t.createBufferSource(),r=t.createEdgeFader({when:e,duration:this.duration});return n.buffer=this.buffer(),n.connect(r),r.connect(this.output),t.trigger(n,{when:e,duration:this.duration}),this}};return new n};t.exports={createSampler:n}},{}]},{},[6])(6)});
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],"/Users/jackson/Repos/stepkit/node_modules/classnames/index.js":[function(require,module,exports){
+function classNames() {
+	var args = arguments;
+	var classes = [];
+
+	for (var i = 0; i < args.length; i++) {
+		var arg = args[i];
+		if (!arg) {
+			continue;
+		}
+
+		if ('string' === typeof arg || 'number' === typeof arg) {
+			classes.push(arg);
+		} else if ('object' === typeof arg) {
+			for (var key in arg) {
+				if (!arg.hasOwnProperty(key) || !arg[key]) {
+					continue;
+				}
+				classes.push(key);
+			}
+		}
+	}
+	return classes.join(' ');
+}
+
+// safely export classNames in case the script is included directly on a page
+if (typeof module !== 'undefined' && module.exports) {
+	module.exports = classNames;
+}
+
 },{}],"/Users/jackson/Repos/stepkit/node_modules/geomicons-open/src/js/paths.js":[function(require,module,exports){
 module.exports = {
   bookmark: 'M6 2 L26 2 L26 30 L16 24 L6 30 Z  ',
@@ -20361,7 +20391,7 @@ module.exports = warning;
 module.exports = require('./lib/React');
 
 },{"./lib/React":"/Users/jackson/Repos/stepkit/node_modules/react/lib/React.js"}],"/Users/jackson/Repos/stepkit/package.json":[function(require,module,exports){
-module.exports={
+module.exports=module.exports=module.exports={
   "name": "stepkit",
   "version": "0.0.1",
   "description": "stepkit",
@@ -20378,6 +20408,7 @@ module.exports={
   "devDependencies": {
     "browserify": "^8.1.3",
     "bumpkit": "0.0.2",
+    "classnames": "^1.1.4",
     "envify": "^3.2.0",
     "geomicons-open": "0.0.4",
     "http-server": "^0.7.4",
@@ -20939,7 +20970,50 @@ module.exports = React.createClass({displayName: "exports",
 
 
 
-},{"react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/footer.jsx":[function(require,module,exports){
+},{"react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/dot-indicator.jsx":[function(require,module,exports){
+
+var React = require('react');
+var classnames = require('classnames');
+
+module.exports = React.createClass({displayName: "exports",
+
+  renderDot: function(dot, i) {
+    var dotClass = classnames('h1',
+      { 'gray muted': !dot.isVisible },
+      { 'navy': dot.isDisabled },
+      { 'blue': (dot.isVisible && !dot.isActive) },
+      { 'red': dot.isCurrent },
+      { 'mr1': ((i+1)%4 == 0) });
+    return (
+      React.createElement("span", {key: 'dot-'+i, className: dotClass}, "•")
+    )
+  },
+
+  render: function() {
+    var dots = [];
+    for (var i = 0; i < 16; i++) {
+      dots.push({
+        isCurrent: (i == Math.floor((this.props.currentStep)/4)),
+        isVisible: (Math.floor(i/4) == this.props.currentPage),
+        isDisabled: (i >= Math.floor(this.props.loopLength/4))
+      });
+    }
+    var currentStep = this.props.currentStep;
+    var currentBar = this.props.currentPage;
+    var loopLength = this.props.loopLength;
+    return (
+      React.createElement("div", null, 
+        dots.map(this.renderDot)
+      )
+    )
+  }
+
+});
+
+
+
+
+},{"classnames":"/Users/jackson/Repos/stepkit/node_modules/classnames/index.js","react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/footer.jsx":[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -21048,6 +21122,7 @@ module.exports = React.createClass({displayName: "exports",
 var React = require('react');
 
 var Icon = require('./icon.jsx');
+var DotIndicator = require('./dot-indicator.jsx');
 
 module.exports = React.createClass({displayName: "exports",
 
@@ -21068,6 +21143,7 @@ module.exports = React.createClass({displayName: "exports",
       React.createElement("div", {className: "px2 py2"}, 
         React.createElement("div", {className: "flex flex-center mxn2"}, 
           React.createElement("div", {className: "flex-auto"}), 
+          React.createElement(DotIndicator, React.__spread({},  this.props)), 
           React.createElement("label", {htmlFor: "bar-length", className: "hide"}, 
             "Loop Length"
           ), 
@@ -21097,7 +21173,7 @@ module.exports = React.createClass({displayName: "exports",
 
 
 
-},{"./icon.jsx":"/Users/jackson/Repos/stepkit/src/components/icon.jsx","react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/sequencer.jsx":[function(require,module,exports){
+},{"./dot-indicator.jsx":"/Users/jackson/Repos/stepkit/src/components/dot-indicator.jsx","./icon.jsx":"/Users/jackson/Repos/stepkit/src/components/icon.jsx","react":"/Users/jackson/Repos/stepkit/node_modules/react/react.js"}],"/Users/jackson/Repos/stepkit/src/components/sequencer.jsx":[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
