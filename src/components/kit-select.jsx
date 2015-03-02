@@ -22,6 +22,7 @@ module.exports = React.createClass({
     };
     return (
       <select className="m0 field-dark"
+        value={this.props.currentKit}
         onChange={this.handleChange}>
         {options()}
       </select>

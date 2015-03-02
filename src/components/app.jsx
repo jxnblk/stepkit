@@ -23,7 +23,8 @@ module.exports = React.createClass({
       mixer: null,
       clips: [],
       samplers: [],
-      currentKit: 0,
+      currentKit: 1,
+      currentBank: 2,
     }
   },
 
@@ -67,6 +68,9 @@ module.exports = React.createClass({
     if (tempo) {
       this.setTempo(tempo);
     }
+    this.setState({ currentBank: i }, function() {
+      this.updateUrlParams();
+    });
   },
 
   initSamplers: function() {
@@ -153,6 +157,7 @@ module.exports = React.createClass({
       self.loadBuffers().then(function() {
         self.loadSamplers();
       });;
+      self.updateUrlParams();
     });
   },
 
@@ -173,6 +178,7 @@ module.exports = React.createClass({
         self.playPause();
         self.state.mixer.master.mute.gain.value = 1;
       }
+      self.updateUrlParams();
     });
   },
 
@@ -195,7 +201,7 @@ module.exports = React.createClass({
       isPlaying: bumpkit.isPlaying,
     }, function() {
       self.initConnections();
-      self.loadBank(0);
+      self.loadBank(self.state.currentBank);
       self.loadBuffers().then(function() {
         self.loadSamplers();
       });;
@@ -204,10 +210,22 @@ module.exports = React.createClass({
     this.addStepListener();
   },
 
+  updateUrlParams: function() {
+    if (!window) { return false }
+    var params = {
+      tempo: this.state.tempo,
+      currentKit: this.state.currentKit,
+      currentBank: this.state.currentBank,
+    };
+    var query = '?' + qs.stringify(params);
+    window.history.pushState(params, 'Stepkit', query);
+  },
+
   componentDidMount: function() {
     var self = this;
     if (window) {
       var params = qs.parse(window.location.search);
+      this.setState(params);
     }
     this.initBumpkit();
     if (document) {

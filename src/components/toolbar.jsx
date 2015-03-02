@@ -14,6 +14,7 @@ module.exports = React.createClass({
     var tempoInputStyle = { width: '5rem' }
     var playPauseIcon = this.props.isPlaying ? 'pause' : 'play';
     var currentStep = stepFilter(this.props.currentStep);
+    var currentBank = this.props.banks[this.props.currentBank].name;
     var currentKit = this.props.kits[this.props.currentKit].name;
     return (
       <header className="xborder-bottom border-2 border-lighten bg-darken-2 px2 py1">

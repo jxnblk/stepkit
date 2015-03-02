@@ -5,7 +5,7 @@ var Bumpkit = require('bumpkit');
 try {
   var bumpkit = new Bumpkit();
 } catch(e) {
-  console.log('static site render');
+  //console.log('static site render');
   var bumpkit = false;
 }
 

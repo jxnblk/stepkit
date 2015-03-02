@@ -20361,7 +20361,7 @@ module.exports = warning;
 module.exports = require('./lib/React');
 
 },{"./lib/React":"/Users/jackson/Repos/stepkit/node_modules/react/lib/React.js"}],"/Users/jackson/Repos/stepkit/package.json":[function(require,module,exports){
-module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
   "name": "stepkit",
   "version": "0.0.1",
   "description": "stepkit",
@@ -20406,7 +20406,7 @@ module.exports={
     "build:js": "NODE_ENV=production browserify src/app.js -t envify -t reactify -o js/app.js",
     "build:html": "node src/build",
     "watch:html": "watch 'npm run build:html -s' ./src",
-    "serve": "http-server",
+    "serve": "http-server -p 8000",
     "start": "parallelshell 'npm run watchify -s' 'npm run watch:uglify -s' 'npm run watch:html -s' 'npm run serve -s'"
   },
   "config": {
@@ -20469,6 +20469,62 @@ module.exports={
         "tom-mid.mp3",
         "tom-hi.mp3"
       ]
+    },
+    {
+      "name": "Chip",
+      "path": "/chip",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "frog.mp3",
+        "noise.mp3",
+        "bong.mp3",
+        "bloop.mp3",
+        "bass.mp3",
+        "power-up.mp3"
+      ]
+    },
+    {
+      "name": "Really",
+      "path": "/really-wanna",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "splash.mp3",
+        "hat.mp3",
+        "vocal-1.mp3",
+        "vocal-2.mp3",
+        "vocal-3.mp3",
+        "vocal-4.mp3"
+      ]
+    },
+    {
+      "name": "Wanna",
+      "path": "/really-wanna",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "splash.mp3",
+        "hat.mp3",
+        "vocal-5.mp3",
+        "vocal-6.mp3",
+        "vocal-7.mp3",
+        "vocal-8.mp3"
+      ]
+    },
+    {
+      "name": "Everything",
+      "path": "/everything",
+      "samples": [
+        "kick.mp3",
+        "snare.mp3",
+        "shaker.mp3",
+        "hat.mp3",
+        "vocal-1.mp3",
+        "vocal-2.mp3",
+        "vocal-3.mp3",
+        "vocal-4.mp3"
+      ]
     }
   ],
   "test-kits": [
@@ -20514,7 +20570,7 @@ var Bumpkit = require('bumpkit');
 try {
   var bumpkit = new Bumpkit();
 } catch(e) {
-  console.log('static site render');
+  //console.log('static site render');
   var bumpkit = false;
 }
 
@@ -20549,7 +20605,8 @@ module.exports = React.createClass({displayName: "exports",
       mixer: null,
       clips: [],
       samplers: [],
-      currentKit: 0,
+      currentKit: 1,
+      currentBank: 2,
     }
   },
 
@@ -20593,6 +20650,9 @@ module.exports = React.createClass({displayName: "exports",
     if (tempo) {
       this.setTempo(tempo);
     }
+    this.setState({ currentBank: i }, function() {
+      this.updateUrlParams();
+    });
   },
 
   initSamplers: function() {
@@ -20679,6 +20739,7 @@ module.exports = React.createClass({displayName: "exports",
       self.loadBuffers().then(function() {
         self.loadSamplers();
       });;
+      self.updateUrlParams();
     });
   },
 
@@ -20699,6 +20760,7 @@ module.exports = React.createClass({displayName: "exports",
         self.playPause();
         self.state.mixer.master.mute.gain.value = 1;
       }
+      self.updateUrlParams();
     });
   },
 
@@ -20721,7 +20783,7 @@ module.exports = React.createClass({displayName: "exports",
       isPlaying: bumpkit.isPlaying,
     }, function() {
       self.initConnections();
-      self.loadBank(0);
+      self.loadBank(self.state.currentBank);
       self.loadBuffers().then(function() {
         self.loadSamplers();
       });;
@@ -20730,10 +20792,22 @@ module.exports = React.createClass({displayName: "exports",
     this.addStepListener();
   },
 
+  updateUrlParams: function() {
+    if (!window) { return false }
+    var params = {
+      tempo: this.state.tempo,
+      currentKit: this.state.currentKit,
+      currentBank: this.state.currentBank,
+    };
+    var query = '?' + qs.stringify(params);
+    window.history.pushState(params, 'Stepkit', query);
+  },
+
   componentDidMount: function() {
     var self = this;
     if (window) {
       var params = qs.parse(window.location.search);
+      this.setState(params);
     }
     this.initBumpkit();
     if (document) {
@@ -20804,6 +20878,7 @@ module.exports = React.createClass({displayName: "exports",
     };
     return (
       React.createElement("select", {className: "m0 field-dark", 
+        value: this.props.currentBank, 
         onChange: this.handleChange}, 
         options()
       )
@@ -20906,6 +20981,7 @@ module.exports = React.createClass({displayName: "exports",
     };
     return (
       React.createElement("select", {className: "m0 field-dark", 
+        value: this.props.currentKit, 
         onChange: this.handleChange}, 
         options()
       )
@@ -21027,6 +21103,7 @@ module.exports = React.createClass({displayName: "exports",
     var tempoInputStyle = { width: '5rem' }
     var playPauseIcon = this.props.isPlaying ? 'pause' : 'play';
     var currentStep = stepFilter(this.props.currentStep);
+    var currentBank = this.props.banks[this.props.currentBank].name;
     var currentKit = this.props.kits[this.props.currentKit].name;
     return (
       React.createElement("header", {className: "xborder-bottom border-2 border-lighten bg-darken-2 px2 py1"}, 
@@ -21263,6 +21340,62 @@ data.banks = [
       { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
       { pattern: [0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, ] },
       { pattern: [0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0, ] },
+    ]
+  },
+  {
+    name: 'Game Over',
+    tempo: 96,
+    tracks: [
+      { pattern: [ 1,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, ] },
+      { pattern: [ 1,0,0,1, 0,0,1,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 1,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0, ] },
+    ]
+  },
+  {
+    name: 'Really',
+    tempo: 96,
+    tracks: [
+      { pattern: [ 1,0,0,1, 0,0,0,1, 0,0,1,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, ] },
+      { pattern: [ 1,0,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 1,0,0,1, 0,0,1,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+    ]
+  },
+  {
+    name: 'Wanna',
+    tempo: 96,
+    tracks: [
+      { pattern: [ 1,0,0,1, 0,0,0,1, 0,0,1,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, ] },
+      { pattern: [ 1,1,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,1,0, 0,0,0,0, 0,0,0,0, 1,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,1,1,0, 0,0,1,1, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, ] },
+    ]
+  },
+  {
+    name: 'Do It to Me',
+    tempo: 96,
+    tracks: [
+      { pattern: [ 1,0,0,0, 0,0,0,0, 0,0,1,0, 0,0,1,0, ] },
+      { pattern: [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, ] },
+      { pattern: [ 1,0,0,1, 0,1,0,0, 0,1,0,1, 0,0,0,1, ] },
+      { pattern: [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, ] },
+      { pattern: [ 1,0,0,1, 0,0,1,0, 0,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,1, 0,0,0,0, ] },
+      { pattern: [ 0,0,0,0, 0,0,0,0, 0,0,0,1, 0,0,1,0, ] },
     ]
   },
 
