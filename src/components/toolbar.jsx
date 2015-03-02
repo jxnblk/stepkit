@@ -17,10 +17,10 @@ module.exports = React.createClass({
     var currentBank = this.props.banks[this.props.currentBank].name;
     var currentKit = this.props.kits[this.props.currentKit].name;
     return (
-      <header className="xborder-bottom border-2 border-lighten bg-darken-2 px2 py1">
-        <div className="flex flex-center flex-wrap mxn1">
+      <header className="xborder-bottom xborder-thick xborder-bright-blue px2">
+        <div className="flex flex-center flex-wrap mxn1 py1">
           <div className="px1 py1">
-            <button className="h3 button-outline blue"
+            <button className="h3 button-outline blue border-thick"
               onClick={this.props.playPause}>
               <Icon icon={playPauseIcon} />
             </button>
@@ -66,6 +66,7 @@ module.exports = React.createClass({
           </div> */}
 
         </div>
+        <hr className="m0 border-thick border-bright-blue muted" />
       </header>
     )
   }

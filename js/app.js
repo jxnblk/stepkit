@@ -20361,7 +20361,7 @@ module.exports = warning;
 module.exports = require('./lib/React');
 
 },{"./lib/React":"/Users/jackson/Repos/stepkit/node_modules/react/lib/React.js"}],"/Users/jackson/Repos/stepkit/package.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
   "name": "stepkit",
   "version": "0.0.1",
   "description": "stepkit",
@@ -20899,15 +20899,16 @@ module.exports = React.createClass({displayName: "exports",
 
   render: function() {
     return (
-      React.createElement("footer", {className: "mt3 px2 bg-darken-2"}, 
-        React.createElement("div", {className: "h5 bold flex flex-center flex-wrap mxn2 py2"}, 
+      React.createElement("footer", {className: "mt3 px2 border-top xborder-thick xborder-bright-blue"}, 
+        React.createElement("hr", {className: "m0 border-thick border-bright-blue muted"}), 
+        React.createElement("div", {className: "h5 bold flex flex-baseline flex-wrap mxn2 py2"}, 
           React.createElement("div", {className: "px2"}, 
             "Stepkit v", this.props.version
           ), 
           React.createElement("div", {className: "flex-auto"}), 
           React.createElement("div", {className: "px2"}, 
             React.createElement("span", null, "Made by "), 
-            React.createElement("a", {href: "//jxnblk.com"}, "Jxnblk")
+            React.createElement("a", {href: "//jxnblk.com", className: "button button-transparent"}, "Jxnblk")
           )
         )
       )
@@ -21106,10 +21107,10 @@ module.exports = React.createClass({displayName: "exports",
     var currentBank = this.props.banks[this.props.currentBank].name;
     var currentKit = this.props.kits[this.props.currentKit].name;
     return (
-      React.createElement("header", {className: "xborder-bottom border-2 border-lighten bg-darken-2 px2 py1"}, 
-        React.createElement("div", {className: "flex flex-center flex-wrap mxn1"}, 
+      React.createElement("header", {className: "xborder-bottom xborder-thick xborder-bright-blue px2"}, 
+        React.createElement("div", {className: "flex flex-center flex-wrap mxn1 py1"}, 
           React.createElement("div", {className: "px1 py1"}, 
-            React.createElement("button", {className: "h3 button-outline blue", 
+            React.createElement("button", {className: "h3 button-outline blue border-thick", 
               onClick: this.props.playPause}, 
               React.createElement(Icon, {icon: playPauseIcon})
             )
@@ -21154,7 +21155,8 @@ module.exports = React.createClass({displayName: "exports",
             <button className="button-small button-outline blue">Save</button>
           </div> */
 
-        )
+        ), 
+        React.createElement("hr", {className: "m0 border-thick border-bright-blue muted"})
       )
     )
   }
@@ -21242,7 +21244,7 @@ module.exports = React.createClass({displayName: "exports",
 
   render: function() {
     var self = this;
-    var buttonClass = 'flex-auto button-outline ';
+    var buttonClass = 'flex-auto button-outline border-thick ';
     if (this.props.current) {
       buttonClass += (this.props.active) ? 'red bg-red ' : 'red bg-red muted ';
     } else {
